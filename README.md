@@ -1,1 +1,2 @@
 # automatic-openvas
+Init0
