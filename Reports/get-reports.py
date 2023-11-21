@@ -104,7 +104,7 @@ def delete_duplicates(files, export):
     dataframes=[]
     for file in files:
         dataframes.append(pd.read_csv(file))
-    columnas = ["IP", "Hostname", "Port", "Port Protocol", "CVSS", "NVT Name", "Summary", "Specific Result"]
+    columnas = ["IP", "Hostname", "Port", "Port Protocol", "CVSS", "NVT Name", "Summary", "Specific Result", "CVEs"]
     dataframe = pd.concat(dataframes,ignore_index=True)[columnas]
     dataframe = dataframe.drop_duplicates()
     dataframe.to_csv(nombre_archivo,index=False)
