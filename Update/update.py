@@ -46,14 +46,14 @@ else:
     control=0
     print("no encuentro")
 
-with open("version.txt", "r") as f:
+with open("/home/redteam/gvm/Update/version.txt", "r") as f:
     versionanterior = f.read()
 if (control==1):
-    with open("version.txt","w") as f:
+    with open("/home/redteam/gvm/Update/version.txt","w") as f:
         if(versionanterior != soloversion):
             print(versionanterior)
             f.write(soloversion)
-            salida = os.system("bash update-scanner.sh " + soloversion)
+            salida = os.system("bash /home/redteam/gvm/Update/update-scanner.sh " + soloversion)
             print(salida)
             email(soloversion)
         else:
