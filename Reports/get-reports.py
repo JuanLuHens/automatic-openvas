@@ -19,7 +19,7 @@ def get_pass():
 def connect_gvm():
     # path to unix socket
     path = "/run/gvmd/gvmd.sock"
-    connection = UnixSocketConnection(path=path)
+    connection = UnixSocketConnection(path=path, timeout=600)
     return connection
 
 
@@ -36,7 +36,7 @@ def ready_report(connection, user, password, reportformat):
         print(f"Status: {status}")
         print(f"Version: {version}")
         gmp.authenticate(user, password)
-        respuesta = gmp.get_reports()
+        respuesta = gmp.get_reports(filter_string='rows=1000')
         result_dict = {}
         root = ET.fromstring(respuesta)
         reports = root.findall(".//report")
