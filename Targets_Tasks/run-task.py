@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import getpass
 import datetime
 import smtplib
+import os
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -109,12 +110,15 @@ def start_task(connection, user, password):
                             "scan_end": scan_end
                     }
                     informacion_tareas.append(informacion_tarea)
-        with open(logfinal, "w") as archivo:
-            for informacion_tarea in informacion_tareas:
-                archivo.write(str(informacion_tarea) + "\n")
-        print("Todas las tareas finalizadas")
-        #enviar email una vez finalizado con los logs y los reportes.
-        #email(logfinal, tasklog)
+        if os.path.exists(logfinal):
+            return 0
+        else:
+            #enviar email una vez finalizado con los logs y los reportes.
+            email(logfinal, tasklog)
+            with open(logfinal, "w") as archivo:
+                for informacion_tarea in informacion_tareas:
+                    archivo.write(str(informacion_tarea) + "\n")
+            print("Todas las tareas finalizadas")
         return 0
 
 

@@ -36,7 +36,7 @@ def ready_report(connection, user, password, reportformat):
         print(f"Status: {status}")
         print(f"Version: {version}")
         gmp.authenticate(user, password)
-        respuesta = gmp.get_reports(filter_string='rows=1000')
+        respuesta = gmp.get_reports(filter_string='rows=1500')
         result_dict = {}
         root = ET.fromstring(respuesta)
         reports = root.findall(".//report")
@@ -130,3 +130,4 @@ if __name__ == "__main__":
     connection = connect_gvm()
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat)
+    
