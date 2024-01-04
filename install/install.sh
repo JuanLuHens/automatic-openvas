@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Instalador de openvas 12/01/2023 para ubuntu 20.20
+# Instalador de openvas 01/01/2024 para ubuntu 22.04.03
 #  _____           _        _           _            
 # |_   _|         | |      | |         | |           
 #   | |  _ __  ___| |_ __ _| | __ _  __| | ___  _ __ 
@@ -16,7 +16,7 @@
 # | |__) |_|_  __| |    | | ___  __ _ _ __ ___       
 # |  _  // _ \/ _` |    | |/ _ \/ _` | '_ ` _ \      
 # | | \ \  __/ (_| |    | |  __/ (_| | | | | | |     
-# |_|  \_\___|\__,_|    |_|\___|\__,_|_| |_| |_|     Atento 2023
+# |_|  \_\___|\__,_|    |_|\___|\__,_|_| |_| |_|     Atento 2024
 #
 #
 #                                                
@@ -323,12 +323,13 @@ sudo ldconfig
 sudo gvmd --create-user=admin --password=admin
 
 ## Retrieve our administrators uuid
-sudo gvmd --get-users --verbose
-admin 0279ba6c-391a-472f-8cbd-1f6eb808823b
+#sudo gvmd --get-users --verbose
+#admin 0279ba6c-391a-472f-8cbd-1f6eb808823b
 
 ## Set the value using the administrators uuid
-sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value UUID_HERE
-
+#sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value UUID_HERE
+sudo gvmd --get-users --verbose | awk '{print $2}' | xargs -I {} sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value {}
+#read -p "Comprueba comando sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value"
 # NVT sync. This might take awhile.
 sudo -u gvm greenbone-nvt-sync
 

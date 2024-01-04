@@ -71,7 +71,7 @@ def start_task(connection, user, password):
     tasklog='/home/redteam/gvm/taskslog.txt'
     with Gmp(connection=connection) as gmp:
         gmp.authenticate(user,password)
-        respuesta = gmp.get_tasks(filter_string='rows=1000')
+        respuesta = gmp.get_tasks(filter_string='rows=1500')
         root = ET.fromstring(respuesta)
         for task_elem in root.findall(".//task"):
             task_id = task_elem.get("id")
