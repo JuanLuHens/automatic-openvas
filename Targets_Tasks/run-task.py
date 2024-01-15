@@ -95,7 +95,7 @@ def start_task(connection, user, password, configuracion):
                 write_log("La tarea {0} con id {1} está corriendo aun. Finalizamos script.".format(name,task_id),tasklog)
                 return 1
             elif(status=='New'):
-                write_log("Arrancamos la tarea {0} con id {1}".format(name,task_id))
+                write_log("Arrancamos la tarea {0} con id {1}".format(name,task_id),tasklog)
                 starttask=gmp.start_task(task_id)
                 write_log(starttask, tasklog)
                 return 2
