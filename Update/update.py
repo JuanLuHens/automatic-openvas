@@ -1,21 +1,22 @@
 import requests
 import subprocess
-import os
+import os, json
 from bs4 import BeautifulSoup
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def email(version):
-    smtp_server = 'SERVIDOR CORREO'
+def email(version, configuracion):
+    smtp_server = configuracion.get('mailserver')
     smtp_port = 25  # Puerto 25 para autenticación anónima
-    from_address = 'FROM'
-    to_address = 'DESTINER'
-    subject = f'[EMEA]OpenVas Scanner actualizado {version} xxxxxx'
+    from_address = configuracion.get('from')
+    to_address = configuracion.get('to')
+    region = configuracion.get('region')
+    subject = f'[{region}]OpenVas Scanner actualizado {version}'
     message = """<html>
     <head></head>
     <body>
-    <p>El OpenVas Scanner de EMEA se ha actualizado.</p>
+    <p>El OpenVas Scanner se ha actualizado.</p>
     </body>
     </html>
     """
@@ -28,7 +29,19 @@ def email(version):
     smtp.sendmail(from_address, to_address, msg.as_string())
     smtp.quit()
 
+def leer_configuracion():
+    try:
+        with open('/home/redteam/gvm/Config/config.json', 'r') as archivo:
+            configuracion = json.load(archivo)
+            return configuracion
+    except FileNotFoundError:
+        print("El archivo 'config.json' no se encontró.")
+    except json.JSONDecodeError as e:
+        print(f"Error al decodificar el archivo JSON: {e}")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
 
+configuracion = leer_configuracion()
 url="https://github.com/greenbone/openvas-scanner/releases"
 response = requests.get(url)
 parser = BeautifulSoup(response.content, "html.parser")

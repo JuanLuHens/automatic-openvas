@@ -4,11 +4,23 @@ import xml.etree.ElementTree as ET
 import getpass
 import datetime
 import smtplib
-import os
+import os, json
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+
+def leer_configuracion():
+    try:
+        with open('/home/redteam/gvm/Config/config.json', 'r') as archivo:
+            configuracion = json.load(archivo)
+            return configuracion
+    except FileNotFoundError:
+        print("El archivo 'config.json' no se encontró.")
+    except json.JSONDecodeError as e:
+        print(f"Error al decodificar el archivo JSON: {e}")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
 
 def get_pass():
     password = getpass.getpass(prompt="Enter password: ")
@@ -20,12 +32,13 @@ def write_log(mensaje, log):
         archivo.write(mensaje_tiempo)
         print(mensaje_tiempo)
         
-def email(file1, file2):
-    smtp_server = 'SERVIDOR CORREO'
+def email(file1, file2, configuracion):
+    smtp_server = configuracion.get('mailserver')
     smtp_port = 25  # Puerto 25 para autenticación anónima
-    from_address = 'FROM'
-    to_address = 'DESTINER'
-    subject = '[REGION]Openvas tasks finalizadas'
+    from_address = configuracion.get('from')
+    to_address = configuracion.get('to')
+    region = configuracion.get('region')
+    subject = f'[{region}]Openvas tasks finalizadas'
     message = """<html>
     <head></head>
     <body>
@@ -66,7 +79,7 @@ def connect_gvm():
     return connection
 
 
-def start_task(connection, user, password):
+def start_task(connection, user, password, configuracion):
     informacion_tareas = []
     logfinal='/home/redteam/gvm/tasksend.txt'
     tasklog='/home/redteam/gvm/taskslog.txt'
@@ -114,18 +127,18 @@ def start_task(connection, user, password):
             return 0
         else:
             #enviar email una vez finalizado con los logs y los reportes.
-            email(logfinal, tasklog)
+            email(logfinal, tasklog, configuracion)
             with open(logfinal, "w") as archivo:
                 for informacion_tarea in informacion_tareas:
                     archivo.write(str(informacion_tarea) + "\n")
             print("Todas las tareas finalizadas")
         return 0
 
-
-user = 'admin'
-password = get_pass()
+configuracion = leer_configuracion()
+user = configuracion.get('user')
+password = configuracion.get('password')
 connection = connect_gvm()
-resultado=start_task(connection,user,password)
+resultado=start_task(connection,user,password,configuracion)
 if(resultado==0):
     print("Finalizamos sin lanzar")
 elif(resultado==1):
