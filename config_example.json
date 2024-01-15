@@ -1,0 +1,9 @@
+{
+    "mailserver": "10.1.1.1",
+    "user": "admin",
+    "password": "admin",
+    "region": "es",
+    "from": "openvas@openvas.com",
+    "to": "redteam@redteam.com",
+    "version": "1.2024.1.15"
+} 

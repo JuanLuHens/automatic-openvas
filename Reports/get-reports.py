@@ -108,6 +108,14 @@ def delete_duplicates(files, export):
     dataframe = pd.concat(dataframes,ignore_index=True)[columnas]
     dataframe = dataframe.drop_duplicates()
     dataframe.to_csv(nombre_archivo,index=False)
+    separar_cve(nombre_archivo)
+    
+def separar_cve(nombre_archivo):
+    df = pd.read_csv(nombre_archivo)
+    con_info = df[df['CVEs'].notnull()]
+    sin_info = df[df['CVEs'].isnull()]
+    con_info.to_csv(nombre_archivo.replace('.csv', '_CVE.csv'),index=False)
+    sin_info.to_csv(nombre_archivo.replace('.csv', '_Misconfigs.csv'),index=False)
 
 
 def get_reportformat(connection, username, password):
