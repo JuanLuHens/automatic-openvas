@@ -56,7 +56,7 @@ def email(file1, file2, configuracion):
     file1_mime = MIMEBase('application', 'octet-stream')
     file1_mime.set_payload(file1_attachment.read())
     encoders.encode_base64(file1_mime)
-    file1_mime.add_header('Content-Disposition', f'attachment; filename=file1.txt')
+    file1_mime.add_header('Content-Disposition', f'attachment; filename=tasksend.txt')
     msg.attach(file1_mime)
     file1_attachment.close()
 
@@ -65,7 +65,7 @@ def email(file1, file2, configuracion):
     file2_mime = MIMEBase('application', 'octet-stream')
     file2_mime.set_payload(file2_attachment.read())
     encoders.encode_base64(file2_mime)
-    file2_mime.add_header('Content-Disposition', f'attachment; filename=file2.txt')
+    file2_mime.add_header('Content-Disposition', f'attachment; filename=taskslog.txt')
     msg.attach(file2_mime)
     file2_attachment.close()
     smtp = smtplib.SMTP(smtp_server, smtp_port)
