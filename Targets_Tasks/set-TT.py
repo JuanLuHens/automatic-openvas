@@ -55,7 +55,7 @@ def ready_target(connection,user,password,df):
                     
 def create_target(titulo, rangos, desc,gmp,log_file):
     print(f'[TARGET]Título: {titulo}, Rangos: {rangos}, Descripción: {desc}')
-    response_create=gmp.create_target(name=titulo,hosts=rangos,comment=desc,port_list_id='fc130a8c-8f41-4206-b1ff-7c3e4fb32ae1')
+    response_create=gmp.create_target(name=titulo,hosts=rangos,comment=desc,port_list_id='730ef368-57e2-11e1-a90f-406186ea4fc5')
     create_xml= ET.fromstring(response_create)
     status_target = create_xml.get('status')
     status_target_text = create_xml.get('status_text')
