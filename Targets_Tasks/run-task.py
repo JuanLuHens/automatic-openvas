@@ -127,11 +127,11 @@ def start_task(connection, user, password, configuracion):
             return 0
         else:
             #enviar email una vez finalizado con los logs y los reportes.
-            email(logfinal, tasklog, configuracion)
             with open(logfinal, "w") as archivo:
                 for informacion_tarea in informacion_tareas:
                     archivo.write(str(informacion_tarea) + "\n")
             print("Todas las tareas finalizadas")
+            email(logfinal, tasklog, configuracion)
         return 0
 
 configuracion = leer_configuracion()
