@@ -85,7 +85,7 @@ def start_task(connection, user, password, configuracion):
     tasklog='/home/redteam/gvm/taskslog.txt'
     with Gmp(connection=connection) as gmp:
         gmp.authenticate(user,password)
-        respuesta = gmp.get_tasks(filter_string='rows=1500')
+        respuesta = gmp.get_tasks(filter_string='status="Running" status="Requested" status="Queued"')
         root = ET.fromstring(respuesta)
         for task_elem in root.findall(".//task"):
             task_id = task_elem.get("id")
@@ -94,35 +94,46 @@ def start_task(connection, user, password, configuracion):
             if(status=='Running' or status=='Requested' or status=='Queued'):
                 write_log("La tarea {0} con id {1} está corriendo aun. Finalizamos script.".format(name,task_id),tasklog)
                 return 1
-            elif(status=='New'):
+        respuesta = gmp.get_tasks(filter_string='status="New"')
+        root = ET.fromstring(respuesta)
+        for task_elem in root.findall(".//task"):
+            task_id = task_elem.get("id")
+            name = task_elem.findtext("name")
+            status = task_elem.findtext("status")
+            if(status=='New'):
                 write_log("Arrancamos la tarea {0} con id {1}".format(name,task_id),tasklog)
                 starttask=gmp.start_task(task_id)
                 write_log(starttask, tasklog)
                 return 2
-            else:
-                current_report_elem = task_elem.find(".//last_report/report")
-                if current_report_elem is not None:
-                    report_id = current_report_elem.get("id")
-                    timestamp = current_report_elem.findtext("timestamp")
-                    scan_start = current_report_elem.findtext("scan_start")
-                    scan_end = current_report_elem.findtext("scan_end")
-                    print("Task ID:", task_id)
-                    print("Name:", name)
-                    print("Status:", status)
-                    print("Report ID:", report_id)
-                    print("Timestamp:", timestamp)
-                    print("Scan Start:", scan_start)
-                    print("Scan End:", scan_end)
-                    print("-----------------------------")
-                    informacion_tarea = {
-                            "report_id": report_id,
-                            "name": name,
-                            "status": status,
-                            "timestamp": timestamp,
-                            "scan_start": scan_start,
-                            "scan_end": scan_end
-                    }
-                    informacion_tareas.append(informacion_tarea)
+        respuesta = gmp.get_tasks(filter_string='rows=-1')
+        root = ET.fromstring(respuesta)
+        for task_elem in root.findall(".//task"):
+            task_id = task_elem.get("id")
+            name = task_elem.findtext("name")
+            status = task_elem.findtext("status")
+            current_report_elem = task_elem.find(".//last_report/report")
+            if current_report_elem is not None:
+                report_id = current_report_elem.get("id")
+                timestamp = current_report_elem.findtext("timestamp")
+                scan_start = current_report_elem.findtext("scan_start")
+                scan_end = current_report_elem.findtext("scan_end")
+                print("Task ID:", task_id)
+                print("Name:", name)
+                print("Status:", status)
+                print("Report ID:", report_id)
+                print("Timestamp:", timestamp)
+                print("Scan Start:", scan_start)
+                print("Scan End:", scan_end)
+                print("-----------------------------")
+                informacion_tarea = {
+                        "report_id": report_id,
+                        "name": name,
+                        "status": status,
+                        "timestamp": timestamp,
+                        "scan_start": scan_start,
+                        "scan_end": scan_end
+                }
+                informacion_tareas.append(informacion_tarea)
         if os.path.exists(logfinal):
             return 0
         else:
