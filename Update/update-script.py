@@ -12,14 +12,14 @@ def email(version, configuracion, resultado):
     to_address = configuracion.get('to')
     region = configuracion.get('region')
     subject = f'[{region}]Script automatizado de Openvas actualizado {version}'
-    message = f'"""<html>
+    message = f'''<html>
     <head></head>
     <body>
     <p>El script automatizado de openvas se ha actualizado con el siguiente resultado:</p>
     <p>{resultado}</p>
     </body>
     </html>
-    """'
+    '''
     msg = MIMEMultipart()
     msg['From'] = from_address
     msg['To'] = to_address
@@ -58,7 +58,7 @@ def leer_configuracion(fichero):
 
 url_github = "https://raw.githubusercontent.com/JuanLuHens/automatic-openvas/main/Config/config_example.json"
 version_github = get_version_github(url_github)
-configuracion = leer_configuracion()
+configuracion = leer_configuracion('/home/redteam/gvm/Config/config_example.json')
 version_local = configuracion.get('version')
 
 if(version_github==version_local):
