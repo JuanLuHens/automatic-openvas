@@ -4,7 +4,6 @@ import xml.etree.ElementTree as ET
 from gvm.connections import UnixSocketConnection
 from gvm.protocols.gmp import Gmp
 from gvm.xml import pretty_print
-import xml.etree.ElementTree as ET
 import untangle
 import base64
 import csv, json
