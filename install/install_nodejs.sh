@@ -1,12 +1,12 @@
 #!/bin/bash
 sudo -v
-print("Definición directorios de instalación")
+echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
 export BUILD_DIR=$HOME/build && \
 export INSTALL_DIR=$HOME/install
 
-print("Instalación de nodejs14.x")
+echo "Instalación de nodejs14.x"
 export NODE_VERSION=node_14.x && \
 export KEYRING=/usr/share/keyrings/nodesource.gpg && \
 export DISTRIBUTION="$(lsb_release -s -c)" && \
@@ -18,7 +18,7 @@ sudo apt update && \
 sudo apt install -y nodejs
 
 sudo -v
-print("Instalación de yarn")
+echo "Instalación de yarn"
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
 sudo apt update && \

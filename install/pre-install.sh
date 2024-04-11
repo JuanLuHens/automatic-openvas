@@ -22,7 +22,7 @@
 #                                                
                                                     
 sudo -v
-print("Instalación de dependencias")
+echo "Instalación de dependencias"
 sudo apt-get update && \
 sudo apt-get -y upgrade && \
 sudo apt-get install -y build-essential && \
@@ -38,14 +38,14 @@ python3-setuptools python3-packaging python3-wrapt python3-cffi python3-redis py
 xmlstarlet texlive-fonts-recommended texlive-latex-extra perl-base xml-twig-tools \
 libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen
 
-print("Creacion usuario y grupo GVM")
+echo "Creacion usuario y grupo GVM"
 sudo useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
 sudo usermod -aG gvm $USER && su $USER
 
-print("Importar la clave de firma GVM para validar la integridad de los archivos de origen")
+echo "Importar la clave de firma GVM para validar la integridad de los archivos de origen"
 curl -f -L https://www.greenbone.net/GBCommunitySigningKey.asc -o /tmp/GBCommunitySigningKey.asc && \
 gpg --import /tmp/GBCommunitySigningKey.asc
 
-print("Editar la clave de firma GVM para confiar en última instancia")
+echo "Editar la clave de firma GVM para confiar en última instancia"
 echo "8AE4BE429B60A59B311C2E739823FAA60ED1E580:6:" > /tmp/ownertrust.txt && \
 gpg --import-ownertrust < /tmp/ownertrust.txt

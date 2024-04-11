@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo -v
-print("Definición directorios de instalación")
+echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
 export BUILD_DIR=$HOME/build && \
@@ -8,14 +8,14 @@ export INSTALL_DIR=$HOME/install
 
 export GVM_VERSION=$1
 
-print("Descarga y verificacion de GVMD " + $GVM_VERSION)
+echo "Descarga y verificacion de GVMD $GVM_VERSION"
 
 export GVMD_VERSION=$GVM_VERSION && \
 curl -f -L https://github.com/greenbone/gvmd/archive/refs/tags/v$GVMD_VERSION.tar.gz -o $SOURCE_DIR/gvmd-$GVMD_VERSION.tar.gz && \
 curl -f -L https://github.com/greenbone/gvmd/releases/download/v$GVMD_VERSION/gvmd-$GVMD_VERSION.tar.gz.asc -o $SOURCE_DIR/gvmd-$GVMD_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/gvmd-$GVMD_VERSION.tar.gz.asc $SOURCE_DIR/gvmd-$GVMD_VERSION.tar.gz
 
-print("Extraer, compilar e instalar")
+echo "Extraer, compilar e instalar"
 tar -C $SOURCE_DIR -xvzf $SOURCE_DIR/gvmd-$GVMD_VERSION.tar.gz && \
 mkdir -p $BUILD_DIR/gvmd && cd $BUILD_DIR/gvmd && \
 cmake $SOURCE_DIR/gvmd-$GVMD_VERSION \

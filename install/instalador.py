@@ -58,7 +58,7 @@ print("Comienza instalación")
 salida_preinstall = os.system("bash /home/redteam/gvm/install/pre-install.sh")
 print(salida_preinstall)
 for key, nversion in versiones.items():
-    #press_anykey()
+    press_anykey()
     modulo = key.replace('_VERSION','')
     print(f'Modulo {modulo}')
     salida =os.system(f'bash /home/redteam/gvm/install/install_{modulo}.sh {nversion}')

@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo -v
-print("Definición directorios de instalación")
+echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
 export BUILD_DIR=$HOME/build && \
@@ -8,12 +8,12 @@ export INSTALL_DIR=$HOME/install
 
 export GVM_VERSION=$1
 
-print("Descarga y verificacion de PG-GVM " + $GVM_VERSION)
+echo "Descarga y verificacion de PG-GVM $GVM_VERSION"
 export PG_GVM_VERSION=$GVM_VERSION
 curl -f -L https://github.com/greenbone/pg-gvm/archive/refs/tags/v$PG_GVM_VERSION.tar.gz -o $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz && \
 curl -f -L https://github.com/greenbone/pg-gvm/releases/download/v$PG_GVM_VERSION/pg-gvm-$PG_GVM_VERSION.tar.gz.asc -o $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz.asc $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz
-print("Extraer, compilar e instalar")
+echo "Extraer, compilar e instalar"
 tar -C $SOURCE_DIR -xvzf $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz && \
 mkdir -p $BUILD_DIR/pg-gvm && cd $BUILD_DIR/pg-gvm && \
 cmake $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION \
