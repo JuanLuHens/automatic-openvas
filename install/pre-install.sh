@@ -32,7 +32,7 @@ sudo_execute apt-get update && \
 sudo_execute apt-get -y upgrade && \
 sudo_execute apt-get install -y build-essential && \
 sudo_execute apt-get install -y cmake pkg-config gcc-mingw-w64 \
-libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev \
+libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev libcurl4-openssl-dev \
 libldap2-dev libgcrypt20-dev libpcap-dev libglib2.0-dev libgpgme-dev libradcli-dev libjson-glib-dev \
 libksba-dev libical-dev libpq-dev libsnmp-dev libpopt-dev libnet1-dev gnupg gnutls-bin \
 libmicrohttpd-dev redis-server libhiredis-dev openssh-client xsltproc nmap \
@@ -41,10 +41,10 @@ heimdal-dev dpkg rsync zip rpm nsis socat libbsd-dev snmp uuid-dev curl gpgsm \
 python3 python3-paramiko python3-lxml python3-defusedxml python3-pip python3-psutil python3-impacket \
 python3-setuptools python3-packaging python3-wrapt python3-cffi python3-redis python3-gnupg \
 xmlstarlet texlive-fonts-recommended texlive-latex-extra perl-base xml-twig-tools \
-libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen
+libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format
 
 echo "Creacion usuario y grupo GVM"
-sudo_execute useradd -r -M -U -G sudo_execute -s /usr/sbin/nologin gvm && \
+sudo_execute useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
 echo "$password" | sudo_execute passwd --stdin gvm && \
 sudo_execute usermod -aG gvm $USER && su $USER
 

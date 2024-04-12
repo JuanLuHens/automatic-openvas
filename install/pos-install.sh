@@ -1,11 +1,11 @@
 #!/bin/bash
-sudo_execute -v
+
 
 password=$1
 sudo_execute() {
     echo "$password" | sudo -S "$@"
 }
-
+sudo_execute -v
 echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
@@ -163,16 +163,16 @@ sudo_execute -v
 sudo_execute cp /home/redteam/gvm/Cron/actualiza_gvm.sh /usr/bin/
 sudo_execute cp /home/redteam/gvm/Cron/cron-update.sh /usr/bin/
 
-cron_schedule = "0 22 * * 6"
-command_to_execute = "/usr/bin/actualiza_gvm.sh"
+cron_schedule="0 22 * * 6"
+command_to_execute="/usr/bin/actualiza_gvm.sh"
 tmp_file=$(mktemp)
 sudo_execute crontab -l >> "$tmp_file"
 echo "$cron_schedule $command_to_execute" >> "$tmp_file"
 sudo_execute crontab "$tmp_file"
 rm "$tmp_file"
 
-cron_schedule = "0 23 * * 6"
-command_to_execute = "/usr/bin/cron-update.sh"
+cron_schedule="0 23 * * 6"
+command_to_execute="/usr/bin/cron-update.sh"
 tmp_file=$(mktemp)
 sudo_execute crontab -l >> "$tmp_file"
 echo "$cron_schedule $command_to_execute" >> "$tmp_file"
