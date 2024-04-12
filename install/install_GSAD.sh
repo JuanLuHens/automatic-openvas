@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo -v
+
 echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
@@ -7,6 +7,11 @@ export BUILD_DIR=$HOME/build && \
 export INSTALL_DIR=$HOME/install
 
 export GVM_VERSION=$1
+password=$2
+
+sudo_execute() {
+    echo "$password" | sudo -S "$@"
+}
 
 echo "Descarga y verificacion de GSAD $GVM_VERSION"
 export GSAD_VERSION=$GVM_VERSION && \
@@ -26,5 +31,5 @@ cmake $SOURCE_DIR/gsad-$GSAD_VERSION \
 -DGSAD_RUN_DIR=/run/gsad \
 -DLOGROTATE_DIR=/etc/logrotate.d && \
 make DESTDIR=$INSTALL_DIR install && \
-sudo cp -rv $INSTALL_DIR/* / && \
+sudo_execute cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*

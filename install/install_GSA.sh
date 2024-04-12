@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo -v
+
 echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
@@ -7,6 +7,11 @@ export BUILD_DIR=$HOME/build && \
 export INSTALL_DIR=$HOME/install
 
 export GVM_VERSION=$1
+password=$2
+
+sudo_execute() {
+    echo "$password" | sudo -S "$@"
+}
 
 echo "Descarga y verificacion de GSA $GVM_VERSION"
 export GSA_VERSION=$GVM_VERSION && \
@@ -18,5 +23,5 @@ echo "Extraer, compilar e instalar"
 tar -C $SOURCE_DIR -xvzf $SOURCE_DIR/gsa-$GSA_VERSION.tar.gz && \
 cd $SOURCE_DIR/gsa-$GSA_VERSION && rm -rf build && \
 yarn && yarn build && \
-sudo mkdir -p $INSTALL_PREFIX/share/gvm/gsad/web/ && \
-sudo cp -r build/* $INSTALL_PREFIX/share/gvm/gsad/web/
+sudo_execute mkdir -p $INSTALL_PREFIX/share/gvm/gsad/web/ && \
+sudo_execute cp -r build/* $INSTALL_PREFIX/share/gvm/gsad/web/

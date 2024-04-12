@@ -20,13 +20,18 @@
 #
 #
 #                                                
-                                                    
-sudo -v
+
+password=$1
+sudo_execute() {
+    echo "$password" | sudo -S "$@"
+}
+
+sudo_execute -v
 echo "Instalación de dependencias"
-sudo apt-get update && \
-sudo apt-get -y upgrade && \
-sudo apt-get install -y build-essential && \
-sudo apt-get install -y cmake pkg-config gcc-mingw-w64 \
+sudo_execute apt-get update && \
+sudo_execute apt-get -y upgrade && \
+sudo_execute apt-get install -y build-essential && \
+sudo_execute apt-get install -y cmake pkg-config gcc-mingw-w64 \
 libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev \
 libldap2-dev libgcrypt20-dev libpcap-dev libglib2.0-dev libgpgme-dev libradcli-dev libjson-glib-dev \
 libksba-dev libical-dev libpq-dev libsnmp-dev libpopt-dev libnet1-dev gnupg gnutls-bin \
@@ -39,8 +44,9 @@ xmlstarlet texlive-fonts-recommended texlive-latex-extra perl-base xml-twig-tool
 libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen
 
 echo "Creacion usuario y grupo GVM"
-sudo useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
-sudo usermod -aG gvm $USER && su $USER
+sudo_execute useradd -r -M -U -G sudo_execute -s /usr/sbin/nologin gvm && \
+echo "$password" | sudo_execute passwd --stdin gvm && \
+sudo_execute usermod -aG gvm $USER && su $USER
 
 echo "Importar la clave de firma GVM para validar la integridad de los archivos de origen"
 curl -f -L https://www.greenbone.net/GBCommunitySigningKey.asc -o /tmp/GBCommunitySigningKey.asc && \

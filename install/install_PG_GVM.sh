@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo -v
+
 echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && \
@@ -7,7 +7,10 @@ export BUILD_DIR=$HOME/build && \
 export INSTALL_DIR=$HOME/install
 
 export GVM_VERSION=$1
-
+password=$2
+sudo_execute() {
+    echo "$password" | sudo -S "$@"
+}
 echo "Descarga y verificacion de PG-GVM $GVM_VERSION"
 export PG_GVM_VERSION=$GVM_VERSION
 curl -f -L https://github.com/greenbone/pg-gvm/archive/refs/tags/v$PG_GVM_VERSION.tar.gz -o $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION.tar.gz && \
@@ -21,5 +24,5 @@ cmake $SOURCE_DIR/pg-gvm-$PG_GVM_VERSION \
 -DCMAKE_BUILD_TYPE=Release \
 -DPostgreSQL_TYPE_INCLUDE_DIR=/usr/include/postgresql && \
 make DESTDIR=$INSTALL_DIR install && \
-sudo cp -rv $INSTALL_DIR/* / && \
+sudo_execute cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*

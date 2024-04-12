@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo -v
+
 echo "Definición directorios de instalación"
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && mkdir -p $SOURCE_DIR && \
@@ -7,6 +7,12 @@ export BUILD_DIR=$HOME/build && mkdir -p $BUILD_DIR && \
 export INSTALL_DIR=$HOME/install && mkdir -p $INSTALL_DIR
 
 export GVM_VERSION=$1
+password=$2
+
+sudo_execute() {
+    echo "$password" | sudo -S "$@"
+}
+
 echo "Descarga y verificacion de las librerias GVM " + $GVM_VERSION
 export GVM_LIBS_VERSION=$GVM_VERSION && \
 curl -f -L https://github.com/greenbone/gvm-libs/archive/refs/tags/v$GVM_LIBS_VERSION.tar.gz -o $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz && \
@@ -22,5 +28,5 @@ cmake $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION \
 -DSYSCONFDIR=/etc \
 -DLOCALSTATEDIR=/var && \
 make DESTDIR=$INSTALL_DIR install && \
-sudo cp -rv $INSTALL_DIR/* / && \
+sudo_execute cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
