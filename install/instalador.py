@@ -63,11 +63,7 @@ for key, nversion in versiones.items():
     print(f'Modulo {modulo}')
     press_anykey()
     salida =os.system(f'bash /home/redteam/gvm/install/install_{modulo}.sh {nversion} {password}')
-    if (modulo == 'PG-GVM'):
-        print("Modulo NodeJS y Yarn")
-        press_anykey()
-        salidanodejs = os.system(f'bash /home/redteam/gvm/install/install_nodejs.sh {password}')
-        print(salidanodejs)
+
 print("Instalación finalizada. A continuación vamos a configurar los servicios y usuario GVM")
 press_anykey()
 salida_posinstall = os.system(f'bash /home/redteam/gvm/install/pos-install.sh {password}')
