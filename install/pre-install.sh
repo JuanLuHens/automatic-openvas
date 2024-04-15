@@ -45,8 +45,8 @@ libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format
 
 echo "Creacion usuario y grupo GVM"
 sudo_execute useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
-echo "$password" | sudo_execute passwd --stdin gvm && \
-sudo_execute usermod -aG gvm $USER && su $USER
+echo "gvm:$password" | sudo chpasswd && \
+sudo_execute usermod -aG gvm $USER
 
 echo "Importar la clave de firma GVM para validar la integridad de los archivos de origen"
 curl -f -L https://www.greenbone.net/GBCommunitySigningKey.asc -o /tmp/GBCommunitySigningKey.asc && \
