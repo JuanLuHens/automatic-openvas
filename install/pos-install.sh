@@ -15,7 +15,7 @@ export INSTALL_DIR=$HOME/install
 echo "Configuración servicio mosquitto"
 sudo_execute systemctl start mosquitto.service && \
 sudo_execute systemctl enable mosquitto.service && \
-echo "mqtt_server_uri = localhost:1883" | sudo_execute tee -a /etc/openvas/openvas.conf
+echo "mqtt_server_uri = localhost:1883" | sudo tee -a /etc/openvas/openvas.conf
 
 echo "Creacion de los directorios faltantes"
 sudo_execute -v
@@ -66,7 +66,7 @@ sudo_execute chown -R gvm:gvm $OPENVAS_GNUPG_HOME
 echo "Permitir a los usuarios del grupo GVM poder lanzar openvas"
 sudo_execute -v
 # allow users of the gvm group run openvas
-sudo_execute echo -e "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+sudo echo -e "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 
 echo "Arrancamos postgresql"
@@ -96,7 +96,7 @@ sudo_execute gvmd --create-user=admin --password=admin
 
 ## Set the value using the administrators uuid
 #sudo_execute gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value UUID_HERE
-sudo_execute gvmd --get-users --verbose | awk '{print $2}' | xargs -I {} sudo_execute gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value {}
+sudo gvmd --get-users --verbose | awk '{print $2}' | xargs -I {} sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value {}
 #read -p "Comprueba comando sudo_execute gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value"
 # NVT sync. This might take awhile.
 echo "Actualizamos el feed"
@@ -158,7 +158,7 @@ sudo_execute systemctl status gvmd.service
 sudo_execute systemctl status gsad.service
 
 echo "Configuramos Cron"
-chmod +x /home/redteam/gvm/Cron/*.ssh
+chmod +x "/home/redteam/gvm/Cron/*.sh"
 sudo_execute -v
 sudo_execute cp /home/redteam/gvm/Cron/actualiza_gvm.sh /usr/bin/
 sudo_execute cp /home/redteam/gvm/Cron/cron-update.sh /usr/bin/

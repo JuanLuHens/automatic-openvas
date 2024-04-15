@@ -9,7 +9,7 @@ password=$1
 sudo_execute() {
     echo "$password" | sudo -S "$@"
 }
-echo "Instalación de nodejs14.x"
+echo "Instalación de nodejs18.x"
 export NODE_VERSION=node_18.x && \
 export KEYRING=/usr/share/keyrings/nodesource.gpg && \
 export DISTRIBUTION="$(lsb_release -s -c)" && \

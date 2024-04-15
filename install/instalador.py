@@ -54,6 +54,11 @@ for key, url in urls.items():
 
 for key, nversion in versiones.items():
     print(f'{key}:{nversion}')
+    
+archivo_json = "/home/redteam/resultado.json"
+with open(archivo_json, "w") as archivo_json:
+    json.dump(versiones, archivo_json)
+print("Archivo JSON creado correctamente.")
 press_anykey()
 print("Comienza instalación")
 salida_preinstall = os.system(f'bash /home/redteam/gvm/install/pre-install.sh {password}')
