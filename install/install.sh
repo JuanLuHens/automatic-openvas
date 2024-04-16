@@ -28,7 +28,7 @@ sudo apt-get update && \
 sudo apt-get -y upgrade && \
 sudo apt-get install -y build-essential && \
 sudo apt-get install -y cmake pkg-config gcc-mingw-w64 \
-libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev \
+libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev libcurl4-openssl-dev\
 libldap2-dev libgcrypt20-dev libpcap-dev libglib2.0-dev libgpgme-dev libradcli-dev libjson-glib-dev \
 libksba-dev libical-dev libpq-dev libsnmp-dev libpopt-dev libnet1-dev gnupg gnutls-bin \
 libmicrohttpd-dev redis-server libhiredis-dev openssh-client xsltproc nmap \
@@ -46,7 +46,7 @@ sudo usermod -aG gvm $USER
 GVM_LIBS_VERSION=$(jq -r '.GVM_LIBS_VERSION' /home/redteam/resultado.json)
 GVMD_VERSION=$(jq -r '.GVMD_VERSION' /home/redteam/resultado.json)
 PG_GVM_VERSION=$(jq -r '.PG_GVM_VERSION' /home/redteam/resultado.json)
-GSA_VERSIONN=$(jq -r '.GSA_VERSION' /home/redteam/resultado.json)
+GSA_VERSION=$(jq -r '.GSA_VERSION' /home/redteam/resultado.json)
 GSAD_VERSION=$(jq -r '.GSAD_VERSION' /home/redteam/resultado.json)
 OPENVAS_SMB_VERSION=$(jq -r '.OPENVAS_SMB_VERSION' /home/redteam/resultado.json)
 OPENVAS_SCANNER_VERSION=$(jq -r '.OPENVAS_SCANNER_VERSION' /home/redteam/resultado.json)
@@ -73,7 +73,7 @@ gpg --import-ownertrust < /tmp/ownertrust.txt
 # Download and verify the GVM librarires
 
 curl -f -L https://github.com/greenbone/gvm-libs/archive/refs/tags/v$GVM_LIBS_VERSION.tar.gz -o $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz && \
-curl -f -L https://github.com/greenbone/gvm-libs/releases/download/v$GVM_LIBS_VERSION/gvm-libs-$GVM_LIBS_VERSION.tar.gz.asc -o $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz.asc && \
+curl -f -L https://github.com/greenbone/gvm-libs/releases/download/v$GVM_LIBS_VERSION/gvm-libs-v$GVM_LIBS_VERSION.tar.gz.asc -o $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz.asc $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz
 
 # Extract, build and install
@@ -129,7 +129,7 @@ sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
 sudo -v
 # Install NodeJS v18.x
-export NODE_VERSION=node_18 && \
+export NODE_VERSION=node_18.x && \
 export KEYRING=/usr/share/keyrings/nodesource.gpg && \
 export DISTRIBUTION="$(lsb_release -s -c)" && \
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null && \
@@ -154,7 +154,7 @@ gpg --verify $SOURCE_DIR/gsa-$GSA_VERSION.tar.gz.asc $SOURCE_DIR/gsa-$GSA_VERSIO
 # extract build and install GSA (this may take awhile)
 tar -C $SOURCE_DIR -xvzf $SOURCE_DIR/gsa-$GSA_VERSION.tar.gz && \
 cd $SOURCE_DIR/gsa-$GSA_VERSION && rm -rf build && \
-yarn && yarn build && \
+npm install && npm run build && \
 sudo mkdir -p $INSTALL_PREFIX/share/gvm/gsad/web/ && \
 sudo cp -r build/* $INSTALL_PREFIX/share/gvm/gsad/web/
 sudo -v
@@ -182,7 +182,7 @@ sudo -v
 # Set version download and verify OpenVAS-SMB
 
 curl -f -L https://github.com/greenbone/openvas-smb/archive/refs/tags/v$OPENVAS_SMB_VERSION.tar.gz -o $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz && \
-curl -f -L https://github.com/greenbone/openvas-smb/releases/download/v$OPENVAS_SMB_VERSION/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz.asc -o $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz.asc && \
+curl -f -L https://github.com/greenbone/openvas-smb/releases/download/v$OPENVAS_SMB_VERSION/openvas-smb-v$OPENVAS_SMB_VERSION.tar.gz.asc -o $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz.asc $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION.tar.gz
 
 # extract build and install openvas-smb
@@ -194,11 +194,11 @@ cmake $SOURCE_DIR/openvas-smb-$OPENVAS_SMB_VERSION \
 make DESTDIR=$INSTALL_DIR install && \
 sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
-
+#por aqui
 # Download and verify openvas-scanner
 
 curl -f -L https://github.com/greenbone/openvas-scanner/archive/refs/tags/v$OPENVAS_SCANNER_VERSION.tar.gz -o $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz && \
-curl -f -L https://github.com/greenbone/openvas-scanner/releases/download/v$OPENVAS_SCANNER_VERSION/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz.asc -o $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz.asc && \
+curl -f -L https://github.com/greenbone/openvas-scanner/releases/download/v$OPENVAS_SCANNER_VERSION/openvas-scanner-v$OPENVAS_SCANNER_VERSION.tar.gz.asc -o $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz.asc $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION.tar.gz
 sudo -v
 # extract build and install openvas-scanner
@@ -218,7 +218,7 @@ rm -rf $INSTALL_DIR/*
 # ospd-openvas
 
 curl -f -L https://github.com/greenbone/ospd-openvas/archive/refs/tags/v$OSPD_OPENVAS_VERSION.tar.gz -o $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz && \
-curl -f -L https://github.com/greenbone/ospd-openvas/releases/download/v$OSPD_OPENVAS_VERSION/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz.asc -o $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz.asc && \
+curl -f -L https://github.com/greenbone/ospd-openvas/releases/download/v$OSPD_OPENVAS_VERSION/ospd-openvas-v$OSPD_OPENVAS_VERSION.tar.gz.asc -o $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz.asc $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION.tar.gz
 
 # extract, build and install
@@ -229,11 +229,10 @@ cd $SOURCE_DIR/ospd-openvas-$OSPD_OPENVAS_VERSION && \
 sudo python3 -m pip install . --prefix /usr --no-warn-script-location --no-dependencies && \
 sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
-sudo -v
 # notus-scanner
 
-curl -f -L https://github.com/greenbone/notus-scanner/archive/refs/tags/v$NOTUS_VERSION.tar.gz -o $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz
-curl -f -L https://github.com/greenbone/notus-scanner/releases/download/v$NOTUS_VERSION/notus-scanner-$NOTUS_VERSION.tar.gz.asc -o $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz.asc && \
+curl -f -L https://github.com/greenbone/notus-scanner/archive/refs/tags/v$NOTUS_VERSION.tar.gz -o $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz && \
+curl -f -L https://github.com/greenbone/notus-scanner/releases/download/v$NOTUS_VERSION/notus-scanner-v$NOTUS_VERSION.tar.gz.asc -o $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz.asc && \
 gpg --verify $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz.asc $SOURCE_DIR/notus-scanner-$NOTUS_VERSION.tar.gz
 sudo -v
 # extract, build and install
@@ -246,17 +245,16 @@ sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
 
 # tomli module (required for notus-scanner)
+sudo python3 -m pip install python-gnupg==0.5.2
 sudo python3 -m pip install tomli
 
 # gvm-tools (Installing gvm-tools system-wide)
 # Test to replace $INSTALL_PREFIX with specified path --prefix=/usr/local
 # Using sudo and defining the --prefix /usr works so far but not the best approach
 sudo python3 -m pip install --prefix /usr --no-warn-script-location --no-dependencies gvm-tools && \
-sudo cp -rv $INSTALL_DIR/* / && \
-rm -rf $INSTALL_DIR/*
 
 # Configure Redis
-sudo cp $SOURCE_DIR/openvas-scanner-$GVM_VERSION/config/redis-openvas.conf /etc/redis/ && \
+sudo cp $SOURCE_DIR/openvas-scanner-$OPENVAS_SCANNER_VERSION/config/redis-openvas.conf /etc/redis/ && \
 sudo chown redis:redis /etc/redis/redis-openvas.conf && \
 echo "db_address = /run/redis-openvas/redis.sock" | sudo tee -a /etc/openvas/openvas.conf
 
@@ -272,7 +270,7 @@ echo "mqtt_server_uri = localhost:1883" | sudo tee -a /etc/openvas/openvas.conf
 sudo mkdir -p /var/lib/notus && \
 sudo mkdir -p /run/notus-scanner && \
 sudo mkdir -p /run/gvmd
-sudo -v
+
 # add gvm to redis group and adjust permissions
 sudo usermod -aG redis gvm && \
 sudo chown -R gvm:gvm /var/lib/gvm && \
@@ -288,11 +286,13 @@ sudo chown gvm:gvm /usr/local/sbin/gvmd && \
 sudo chmod 6750 /usr/local/sbin/gvmd
 sudo -v
 # adjust permissions for feed syncs
-sudo chown gvm:gvm /usr/local/bin/greenbone-nvt-sync && \
-sudo chmod 740 /usr/local/sbin/greenbone-feed-sync && \
-sudo chown gvm:gvm /usr/local/sbin/greenbone-*-sync && \
-sudo chmod 740 /usr/local/sbin/greenbone-*-sync
-sudo -v
+# sudo chown gvm:gvm /usr/local/bin/greenbone-nvt-sync && \
+# sudo chmod 740 /usr/local/sbin/greenbone-feed-sync && \
+# sudo chown gvm:gvm /usr/local/sbin/greenbone-*-sync && \
+# sudo chmod 740 /usr/local/sbin/greenbone-*-sync
+sudo python3 -m pip install greenbone-feed-sync
+
+
 # Feed validation
 export GNUPGHOME=/tmp/openvas-gnupg && \
 mkdir -p $GNUPGHOME && \
@@ -311,8 +311,8 @@ sudo chown -R gvm:gvm $OPENVAS_GNUPG_HOME
 #%sudo   ALL=(ALL:ALL) ALL
 sudo -v
 # allow users of the gvm group run openvas
-sudo echo -e "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
+#sudo echo -e "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+sudo sh -c 'echo "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers'
 
 # Start PostgreSQL
 sudo systemctl start postgresql@14-main.service
@@ -342,14 +342,17 @@ sudo -v
 sudo gvmd --get-users --verbose | awk '{print $2}' | xargs -I {} sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value {}
 #read -p "Comprueba comando sudo gvmd --modify-setting 78eceaec-3385-11ea-b237-28d24461215b --value"
 # NVT sync. This might take awhile.
+sudo -v
 sudo -u gvm greenbone-nvt-sync
 
 # Update Greenbone Feed Sync (run the commands one by one as GVM user). This might take awhile.
-sudo -u gvm greenbone-feed-sync --type GVMD_DATA
-sudo -u gvm greenbone-feed-sync --type SCAP
-sudo -u gvm greenbone-feed-sync --type CERT
+sudo -u gvm greenbone-feed-sync --type GVMD_DATA -vvv
+sudo -u gvm greenbone-feed-sync --type SCAP -vvv
+sudo -u gvm greenbone-feed-sync --type CERT -vvv
+sudo -u gvm greenbone-feed-sync --type nvt -vvv
 
 # Generate GVM certificates for HTTPS
+sudo -v
 sudo -u gvm gvm-manage-certs -a
 
 ## GVMD systemd
@@ -359,8 +362,8 @@ sudo cp $BUILD_DIR/gvmd.service /etc/systemd/system/
 
 ## GSAD systemd
 
-echo W1VuaXRdCkRlc2NyaXB0aW9uPUdyZWVuYm9uZSBTZWN1cml0eSBBc3Npc3RhbnQgZGFlbW9uIChnc2FkKQpEb2N1bWVudGF0aW9uPW1hbjpnc2FkKDgpIGh0dHBzOi8vd3d3LmdyZWVuYm9uZS5uZXQKQWZ0ZXI9bmV0d29yay50YXJnZXQgZ3ZtZC5zZXJ2aWNlCldhbnRzPWd2bWQuc2VydmljZQoKW1NlcnZpY2VdClR5cGU9Zm9ya2luZwpVc2VyPWd2bQpHcm91cD1ndm0KUnVudGltZURpcmVjdG9yeT1nc2FkClJ1bnRpbWVEaXJlY3RvcnlNb2RlPTI3NzUKUElERmlsZT0vcnVuL2dzYWQvZ3NhZC5waWQKRXhlY1N0YXJ0PS91c3IvbG9jYWwvc2Jpbi9nc2FkIC1mIC0tZHJvcC1wcml2aWxlZ2VzPWd2bSAgLS1saXN0ZW49Q0FNQklBIC0tcG9ydD00NDMKUmVzdGFydD1vbi1mYWlsdXJlClRpbWVvdXRTdG9wU2VjPTEwClJlc3RhcnRTZWM9Mm1pbgpLaWxsTW9kZT1wcm9jZXNzCktpbGxTaWduYWw9U0lHSU5UCkd1ZXNzTWFpblBJRD1ubwpQcml2YXRlVG1wPXRydWUKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldApBbGlhcz1ncmVlbmJvbmUtc2VjdXJpdHktYXNzaXN0YW50LnNlcnZpY2UK | base64 -d | sed "s/CAMBIA/$(hostname -I)/g" > $BUILD_DIR/gsad.service
-
+#echo W1VuaXRdCkRlc2NyaXB0aW9uPUdyZWVuYm9uZSBTZWN1cml0eSBBc3Npc3RhbnQgZGFlbW9uIChnc2FkKQpEb2N1bWVudGF0aW9uPW1hbjpnc2FkKDgpIGh0dHBzOi8vd3d3LmdyZWVuYm9uZS5uZXQKQWZ0ZXI9bmV0d29yay50YXJnZXQgZ3ZtZC5zZXJ2aWNlCldhbnRzPWd2bWQuc2VydmljZQoKW1NlcnZpY2VdClR5cGU9Zm9ya2luZwpVc2VyPWd2bQpHcm91cD1ndm0KUnVudGltZURpcmVjdG9yeT1nc2FkClJ1bnRpbWVEaXJlY3RvcnlNb2RlPTI3NzUKUElERmlsZT0vcnVuL2dzYWQvZ3NhZC5waWQKRXhlY1N0YXJ0PS91c3IvbG9jYWwvc2Jpbi9nc2FkIC1mIC0tZHJvcC1wcml2aWxlZ2VzPWd2bSAgLS1saXN0ZW49Q0FNQklBIC0tcG9ydD00NDMKUmVzdGFydD1vbi1mYWlsdXJlClRpbWVvdXRTdG9wU2VjPTEwClJlc3RhcnRTZWM9Mm1pbgpLaWxsTW9kZT1wcm9jZXNzCktpbGxTaWduYWw9U0lHSU5UCkd1ZXNzTWFpblBJRD1ubwpQcml2YXRlVG1wPXRydWUKCltJbnN0YWxsXQpXYW50ZWRCeT1tdWx0aS11c2VyLnRhcmdldApBbGlhcz1ncmVlbmJvbmUtc2VjdXJpdHktYXNzaXN0YW50LnNlcnZpY2UK | base64 -d | sed "s/CAMBIA/$(hostname -I)/g" > $BUILD_DIR/gsad.service
+echo W1VuaXRdCkRlc2NyaXB0aW9uPUdyZWVuYm9uZSBTZWN1cml0eSBBc3Npc3RhbnQgZGFlbW9uIChnc2FkKQpEb2N1bWVudGF0aW9uPW1hbjpnc2FkKDgpIGh0dHBzOi8vd3d3LmdyZWVuYm9uZS5uZXQKQWZ0ZXI9bmV0d29yay50YXJnZXQgZ3ZtZC5zZXJ2aWNlCldhbnRzPWd2bWQuc2VydmljZQoKW1NlcnZpY2VdClR5cGU9Zm9ya2luZwpVc2VyPWd2bQpHcm91cD1ndm0KUnVudGltZURpcmVjdG9yeT1nc2FkClJ1bnRpbWVEaXJlY3RvcnlNb2RlPTI3NzUKUElERmlsZT0vcnVuL2dzYWQvZ3NhZC5waWQKRXhlY1N0YXJ0PS91c3IvbG9jYWwvc2Jpbi9nc2FkIC0tbGlzdGVuPUNBTUJJQSAtLXBvcnQ9NDQzClJlc3RhcnQ9b24tZmFpbHVyZQpUaW1lb3V0U3RvcFNlYz0xMApSZXN0YXJ0U2VjPTJtaW4KS2lsbE1vZGU9cHJvY2VzcwpLaWxsU2lnbmFsPVNJR0lOVApHdWVzc01haW5QSUQ9bm8KUHJpdmF0ZVRtcD10cnVlCgpbSW5zdGFsbF0KV2FudGVkQnk9bXVsdGktdXNlci50YXJnZXQKQWxpYXM9Z3JlZW5ib25lLXNlY3VyaXR5LWFzc2lzdGFudC5zZXJ2aWNl | base64 -d | sed "s/CAMBIA/$(hostname -I)/g" > $BUILD_DIR/gsad.service
 sudo cp $BUILD_DIR/gsad.service /etc/systemd/system/
 
 ## ospd-openvas systemd
@@ -374,6 +377,7 @@ echo W1VuaXRdCkRlc2NyaXB0aW9uPU5vdHVzIFNjYW5uZXIKRG9jdW1lbnRhdGlvbj1odHRwczovL2d
 sudo cp $BUILD_DIR/notus-scanner.service /etc/systemd/system/
 
 ## Reload the system daemon to enable the startup scripts
+sudo -v
 sudo systemctl daemon-reload
 sudo systemctl enable notus-scanner
 sudo systemctl enable ospd-openvas
