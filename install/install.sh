@@ -53,13 +53,22 @@ OPENVAS_SCANNER_VERSION=$(jq -r '.OPENVAS_SCANNER_VERSION' /home/redteam/resulta
 OSPD_OPENVAS_VERSION=$(jq -r '.OSPD_OPENVAS_VERSION' /home/redteam/resultado.json)
 NOTUS_VERSION=$(jq -r '.NOTUS_VERSION' /home/redteam/resultado.json)
 REDIS_VERSION=$(jq -r '.OPENVAS_SCANNER_VERSION' /home/redteam/resultado.json)
-
+echo $GVM_LIBS_VERSION
+echo $GVMD_VERSION
+echo $PG_GVM_VERSION
+echo $GSA_VERSION
+echo $GSAD_VERSION
+echo $OPENVAS_SMB_VERSION
+echo $OPENVAS_SCANNER_VERSION
+echo $OSPD_OPENVAS_VERSION
+echo $NOTUS_VERSION
+echo $REDIS_VERSION
 # Define installation directories
 export PATH=$PATH:/usr/local/sbin && export INSTALL_PREFIX=/usr/local && \
 export SOURCE_DIR=$HOME/source && mkdir -p $SOURCE_DIR && \
 export BUILD_DIR=$HOME/build && mkdir -p $BUILD_DIR && \
 export INSTALL_DIR=$HOME/install && mkdir -p $INSTALL_DIR
-
+sleep 5
 # Import GVM signing key to validate the integrity of the source files
 curl -f -L https://www.greenbone.net/GBCommunitySigningKey.asc -o /tmp/GBCommunitySigningKey.asc && \
 gpg --import /tmp/GBCommunitySigningKey.asc
@@ -69,7 +78,7 @@ echo "8AE4BE429B60A59B311C2E739823FAA60ED1E580:6:" > /tmp/ownertrust.txt && \
 gpg --import-ownertrust < /tmp/ownertrust.txt
 
 # Set GVM version
-
+sudo -v
 # Download and verify the GVM librarires
 
 curl -f -L https://github.com/greenbone/gvm-libs/archive/refs/tags/v$GVM_LIBS_VERSION.tar.gz -o $SOURCE_DIR/gvm-libs-$GVM_LIBS_VERSION.tar.gz && \
