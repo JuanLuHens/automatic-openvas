@@ -28,7 +28,7 @@ sudo apt-get update && \
 sudo apt-get -y upgrade && \
 sudo apt-get install -y build-essential && \
 sudo apt-get install -y cmake pkg-config gcc-mingw-w64 \
-libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev libcurl4-openssl-dev\
+libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev libcurl4-openssl-dev \
 libldap2-dev libgcrypt20-dev libpcap-dev libglib2.0-dev libgpgme-dev libradcli-dev libjson-glib-dev \
 libksba-dev libical-dev libpq-dev libsnmp-dev libpopt-dev libnet1-dev gnupg gnutls-bin \
 libmicrohttpd-dev redis-server libhiredis-dev openssh-client xsltproc nmap \
@@ -138,16 +138,26 @@ sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
 sudo -v
 # Install NodeJS v18.x
-export NODE_VERSION=node_18.x && \
-export KEYRING=/usr/share/keyrings/nodesource.gpg && \
-export DISTRIBUTION="$(lsb_release -s -c)" && \
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null && \
-gpg --no-default-keyring --keyring "$KEYRING" --list-keys && \
-echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee /etc/apt/sources.list.d/nodesource.list && \
-echo "deb-src [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list && \
-sudo apt update && \
-sudo apt install -y nodejs
-
+# Obtener la distribución
+DISTRIBUTION="$(lsb_release -s -c)"
+echo $DISTRIBUTION
+# Comprobar si la distribución es Kali
+if echo "$DISTRIBUTION" | grep -q "kali"; then
+    echo "kali"
+    sudo apt update && \
+    sudo apt install -y nodejs
+else
+    echo "ubuntu"
+    export NODE_VERSION=node_18.x && \
+    export KEYRING=/usr/share/keyrings/nodesource.gpg && \
+    export DISTRIBUTION="$(lsb_release -s -c)" && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null && \
+    gpg --no-default-keyring --keyring "$KEYRING" --list-keys && \
+    echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee /etc/apt/sources.list.d/nodesource.list && \
+    echo "deb-src [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list && \
+    sudo apt update && \
+    sudo apt install -y nodejs
+fi
 # install yarn
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && \
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && \
