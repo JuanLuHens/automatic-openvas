@@ -334,7 +334,18 @@ sudo -v
 sudo sh -c 'echo "gvm ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers'
 
 # Start PostgreSQL
-sudo systemctl start postgresql@14-main.service
+# Obtener la distribución
+DISTRIBUTION="$(lsb_release -s -c)"
+echo $DISTRIBUTION
+# Comprobar si la distribución es Kali
+if echo "$DISTRIBUTION" | grep -q "kali"; then
+    echo "kali"
+    sudo systemctl start postgresql.service
+else
+    echo "ubuntu"
+    sudo systemctl start postgresql@14-main.service
+fi
+
 
 # Setup PostgreSQL
 sudo -u postgres -H sh -c "createuser -DRS gvm ;\
