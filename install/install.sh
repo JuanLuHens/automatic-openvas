@@ -145,7 +145,7 @@ echo $DISTRIBUTION
 if echo "$DISTRIBUTION" | grep -q "kali"; then
     echo "kali"
     sudo apt update && \
-    sudo apt install -y nodejs
+    sudo apt install -y nodejs npm
 else
     echo "ubuntu"
     export NODE_VERSION=node_18.x && \
