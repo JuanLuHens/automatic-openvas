@@ -138,7 +138,8 @@ def get_reportformat(connection, username, password):
 def get_hosts(origen,destino):
     # Solicitar la contraseña de sudo
     if os.path.exists(origen):
-        os.remove(origen)
+        comando=f'sudo rm {origen}'
+        subprocess.run(comando, shell=True)
     if os.path.exists(destino):
         os.remove(destino)
     comando_postgresql = f"""

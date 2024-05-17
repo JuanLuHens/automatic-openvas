@@ -5,5 +5,8 @@
     "region": "es",
     "from": "openvas@openvas.com",
     "to": "redteam@redteam.com",
-    "version": "1.2024.1.17_13"
+    "aws_access_key_id":"1",
+    "aws_secret_access_key":"1",
+    "s3bucket":"1",
+    "version": "1.2024.5.17_13"
 } 
