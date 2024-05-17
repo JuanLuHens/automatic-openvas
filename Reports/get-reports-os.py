@@ -152,7 +152,7 @@ def get_hosts(origen,destino):
     shutil.copyfile(origen,destino)
 
 def vulns_ip(vulns,host):
-    export = '/home/redteam/gvm/Reports/export/vulns_host'
+    export = '/home/redteam/gvm/Reports/exports/vulns_host'
     now = datetime.datetime.now()
     year = now.year
     month = now.month
