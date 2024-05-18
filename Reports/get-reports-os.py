@@ -11,7 +11,45 @@ import os
 import datetime
 import subprocess
 import shutil
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
+def leer_configuracion():
+    try:
+        with open('/home/redteam/gvm/Config/config.json', 'r') as archivo:
+            configuracion = json.load(archivo)
+            return configuracion
+    except FileNotFoundError:
+        print("El archivo 'config.json' no se encontró.")
+    except json.JSONDecodeError as e:
+        print(f"Error al decodificar el archivo JSON: {e}")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
+        
+def email(configuracion):
+    smtp_server = configuracion.get('mailserver')
+    smtp_port = 25  # Puerto 25 para autenticación anónima
+    from_address = configuracion.get('from')
+    to_address = configuracion.get('to')
+    region = configuracion.get('region')
+    subject = f'[{region}]Openvas Reportes generados'
+    message = """<html>
+    <head></head>
+    <body>
+    <p>Se han generado los reportes. Se procede a subirlos a balbix.</p>
+    </body>
+    </html>
+    """
+    msg = MIMEMultipart()
+    msg['From'] = from_address
+    msg['To'] = to_address
+    msg['Subject'] = subject
+    msg.attach(MIMEText(message, 'html'))
+    smtp = smtplib.SMTP(smtp_server, smtp_port)
+    smtp.sendmail(from_address, to_address, msg.as_string())
+    smtp.quit()
 
 def get_pass():
     password = getpass.getpass(prompt="Enter password: ")
@@ -120,7 +158,9 @@ def separar_cve(nombre_archivo):
     sin_info = df[df['CVEs'].isnull()]
     con_info.to_csv(nombre_archivo.replace('.csv', '_CVE.csv'),index=False)
     sin_info.to_csv(nombre_archivo.replace('.csv', '_Misconfigs.csv'),index=False)
-
+    ficheros=[nombre_archivo.replace('.csv', '_CVE.csv'), nombre_archivo.replace('.csv', '_Misconfigs.csv')]
+    print("Lanzamos subida a balbix")
+    subprocess.run(["python3", "/home/redteam/gvm/Reports/upload-reports.py"] + ficheros)
 
 def get_reportformat(connection, username, password):
     with Gmp(connection=connection) as gmp:
@@ -179,10 +219,12 @@ def vulns_ip(vulns,host):
 if __name__ == "__main__":
     origen='/tmp/hosts.csv'
     destino='/home/redteam/gvm/Reports/hosts.csv'
-    username = "admin"
-    password = get_pass()
+    configuracion = leer_configuracion()
+    username = configuracion.get('user')
+    password = configuracion.get('password')
     connection = connect_gvm()
     get_hosts(origen,destino)
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat,destino)
+    email(configuracion)
     

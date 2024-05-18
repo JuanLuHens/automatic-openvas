@@ -2,7 +2,7 @@ from gvm.connections import UnixSocketConnection
 from gvm.protocols.gmp import Gmp
 import xml.etree.ElementTree as ET
 import getpass
-import os
+import os, glob
 
 def get_pass():
     password=getpass.getpass(prompt='Enter password: ')
@@ -19,7 +19,7 @@ with Gmp(connection=connection) as gmp:
     response = gmp.get_version()
     print(response)
     gmp.authenticate(user,password)
-    respuesta = gmp.get_reports(filter_string='rows=1500')
+    respuesta = gmp.get_reports(filter_string='rows=1000')
     root = ET.fromstring(respuesta)
     reports = root.findall(".//report")
     for report in reports:
@@ -37,3 +37,13 @@ with Gmp(connection=connection) as gmp:
         os.remove('/home/redteam/gvm/tasksend.txt')
     if os.path.exists('/home/redteam/gvm/taskslog.txt'):
         os.remove('/home/redteam/gvm/taskslog.txt')
+    if os.path.exists('/home/redteam/gvm/logbalbix.txt'):
+        os.remove('/home/redteam/gvm/logbalbix.txt')
+    dir_csv = '/home/redteam/gvm/Reports/exports/'
+    csv_files = glob.glob(os.path.join(dir_csv, '*.csv'))
+    for csv_file in csv_files:
+        try:
+            os.remove(csv_file)
+            print(f'Se ha borrado el archivo: {csv_file}')
+        except OSError as e:
+            print(f'Error al borrar el archivo {csv_file}: {e.strerror}')
