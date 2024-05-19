@@ -74,7 +74,7 @@ def press_anykey(timeout=5):
 
 def actualizar(modulo, version, logupdate):
     if (modulo=='OPENVAS_SCANNER_VERSION'):
-        os.system("bash /home/redteam/gvm/Update/update-scanner.sh " + version)
+        salida = os.system("bash /home/redteam/gvm/Update/update-scanner.sh " + version)
         if(get_openvas_scanner_version(logupdate, nversion)==2):
             installok=1
         else:
@@ -110,20 +110,19 @@ def get_openvas_scanner_version(logupdate, nversion):
                 version = line.split()[1]
                 write_log(f"OpenVAS Scanner Version: {version}", logupdate)
                 if (nversion==version):
-                    retorno = 2
                     write_log("OpenVAS Scanner Version son la misma version", logupdate)
+                    return 2
                 else:
                     write_log("OpenVAS Scanner Version son versiones diferentes se procede a actualizar", logupdate)
-                    retorno = 1
+                    return 1
         write_log("Version Openvas Scanner no encontrada.", logupdate)
-        retorno = 0
+        return 0
     except subprocess.CalledProcessError as e:
         write_log(f"Error ejecuntando openvas -V: {e}", logupdate)
-        retorno = 0
+        return 0
     except Exception as e:
         write_log(f"OpenVAS Scanner Version ha ocurrido un error: {e}", logupdate)
-        retorno = 0
-    return retorno
+        return 0
     
 def get_version_github(url, logupdate):
     try:
@@ -174,4 +173,4 @@ for key, nversion in versiones.items():
             write_log(f'La actualizacion de {key} a la version {nversion} ha sido correcta', logupdate)
         else:
             cuerpoemail+=f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado'
-            write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha ha fallado', logupdate)
+            write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado', logupdate)
