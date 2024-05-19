@@ -90,11 +90,13 @@ def compara(modulo, nversion, logupdate):
     func = switcher.get(modulo, default_case)
     if(func(logupdate, nversion)==1):
         return actualizar(modulo, nversion, logupdate)
+    else:
+        return 0
 
-def get_notus_version():
+def get_notus_version(logupdate, nversion):
     return "No implementado"   
 
-def default_case():
+def default_case(logupdate, nversion):
     return "Invalid case."     
 
 def get_openvas_scanner_version(logupdate, nversion):
@@ -166,9 +168,10 @@ with open(archivo_json, "w") as archivo_json:
 print("Archivo JSON creado correctamente.")
 cuerpoemail=''
 for key, nversion in versiones.items():
-    if(compara(key, nversion, logupdate)):
-        cuerpoemail+=f'La actualizacion de {key} a la version {nversion} ha sido correcta'
-        write_log(f'La actualizacion de {key} a la version {nversion} ha sido correcta', logupdate)
-    else:
-        cuerpoemail+=f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado'
-        write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha ha fallado', logupdate)
+    if(key=='OPENVAS_SCANNER_VERSION'):#para testear la funcion
+        if(compara(key, nversion, logupdate)):
+            cuerpoemail+=f'La actualizacion de {key} a la version {nversion} ha sido correcta'
+            write_log(f'La actualizacion de {key} a la version {nversion} ha sido correcta', logupdate)
+        else:
+            cuerpoemail+=f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado'
+            write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha ha fallado', logupdate)
