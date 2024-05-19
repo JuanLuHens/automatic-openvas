@@ -9,8 +9,9 @@ export INSTALL_DIR=$HOME/install && mkdir -p $INSTALL_DIR
 # Set GVM version
 export GVM_VERSION=$1
 
-mv $BUILD_DIR/openvas-scanner $BUILD_DIR/openvas-scanner-$GVM_Version
-mv $SOURCE_DIR $SOURCE_DIR-$GVM_VERSION
+
+sudo mv $BUILD_DIR/openvas-scanner $BUILD_DIR/openvas-scanner-$GVM_Version
+sudo mv $SOURCE_DIR $SOURCE_DIR-$GVM_VERSION
 mkdir $BUILD_DIR/openvas-scanner
 mkdir $SOURCE_DIR
 
@@ -34,4 +35,4 @@ make DESTDIR=$INSTALL_DIR install && \
 sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
 
-echo "Instalado $GVM_VERSION" >> $HOME/logupdateopenvas.txt
+echo "Instalado OPENVAS_SCANNER $GVM_VERSION" >> $HOME/logupdates.txt
