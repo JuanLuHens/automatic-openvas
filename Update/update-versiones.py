@@ -17,14 +17,26 @@ def write_log(mensaje, log):
         archivo.write(mensaje_tiempo)
         print(mensaje_tiempo)
         
-def email(file1, file2, configuracion, cuerpoemail):
+def leer_configuracion():
+    try:
+        with open('/home/redteam/gvm/Config/config.json', 'r') as archivo:
+            configuracion = json.load(archivo)
+            return configuracion
+    except FileNotFoundError:
+        print("El archivo 'config.json' no se encontró.")
+    except json.JSONDecodeError as e:
+        print(f"Error al decodificar el archivo JSON: {e}")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
+
+def email(file1, configuracion, cuerpoemail):
     smtp_server = configuracion.get('mailserver')
     smtp_port = 25  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
     region = configuracion.get('region')
     subject = f'[{region}]Openvas Updates finalizado'
-    message = """<html>
+    message = f"""<html>
     <head></head>
     <body>
     <p>Se han finalizado los updates. Revise el log adjunto.</p>
@@ -47,15 +59,6 @@ def email(file1, file2, configuracion, cuerpoemail):
     file1_mime.add_header('Content-Disposition', f'attachment; filename=tasksend.txt')
     msg.attach(file1_mime)
     file1_attachment.close()
-
-    # Adjuntar file2.txt
-    file2_attachment = open(file2, 'rb')
-    file2_mime = MIMEBase('application', 'octet-stream')
-    file2_mime.set_payload(file2_attachment.read())
-    encoders.encode_base64(file2_mime)
-    file2_mime.add_header('Content-Disposition', f'attachment; filename=taskslog.txt')
-    msg.attach(file2_mime)
-    file2_attachment.close()
     smtp = smtplib.SMTP(smtp_server, smtp_port)
     smtp.sendmail(from_address, to_address, msg.as_string())
     smtp.quit()
@@ -147,6 +150,8 @@ def get_version_github(url, logupdate):
         print(f"Error: {e}")
 logupdate='/home/redteam/logupdates.txt'
 versiones={}
+configuracion = leer_configuracion()
+s3bucket = configuracion.get('s3bucket')
 urls={'GVM_LIBS_VERSION':'https://github.com/greenbone/gvm-libs/releases','GVMD_VERSION':'https://github.com/greenbone/gvmd/releases','PG_GVM_VERSION':'https://github.com/greenbone/pg-gvm/releases','GSA_VERSION':'https://github.com/greenbone/gsa/releases/','GSAD_VERSION':'https://github.com/greenbone/gsad/releases/','OPENVAS_SMB_VERSION':'https://github.com/greenbone/openvas-smb/releases','OPENVAS_SCANNER_VERSION':'https://github.com/greenbone/openvas-scanner/releases','OSPD_OPENVAS_VERSION':'https://github.com/greenbone/ospd-openvas/releases','NOTUS_VERSION':'https://github.com/greenbone/notus-scanner/releases','REDIS_VERSION':'https://github.com/greenbone/openvas-scanner/releases'}
 for key, url in urls.items():
     version=''
@@ -174,3 +179,5 @@ for key, nversion in versiones.items():
         else:
             cuerpoemail+=f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado'
             write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado', logupdate)
+print('Finalizadas las actualizaciones, se procede a enviar email')
+email(logupdate,configuracion, cuerpoemail)

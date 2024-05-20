@@ -5,6 +5,7 @@ import getpass
 import datetime
 import smtplib
 import os, json
+import subprocess
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
@@ -143,6 +144,8 @@ def start_task(connection, user, password, configuracion):
                     archivo.write(str(informacion_tarea) + "\n")
             print("Todas las tareas finalizadas")
             email(logfinal, tasklog, configuracion)
+            print("Exportamos las tasks")
+            subprocess.run(["python3", "/home/redteam/gvm/Reports/get-reports-os.py"])
         return 0
 
 configuracion = leer_configuracion()
