@@ -45,7 +45,7 @@ def listbucket(s3bucket, tasklog, session):
     
     s3 = session.resource('s3')
     try:
-        my_bucket = s3.Bucket(s3bucket, tasklog)
+        my_bucket = s3.Bucket(s3bucket)
         for my_bucket_object in my_bucket.objects.all():
             #print(my_bucket_object.key)
             for file_name in fileList:
