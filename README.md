@@ -22,8 +22,9 @@ sudo apt install python3.10-venv
 # Instalar dependencias:
 pip3 install -r requirements.txt
 
-# Ingresar al directorio "install" y ejecutar el script de instalación:
+# Ingresar al directorio "install" y ejecutar los scripts de instalacion:
 cd install
+python3 get-versionesonline.py #para obtener las ultimas versiones
 chmod +x install.sh
 ./install.sh
 
@@ -45,4 +46,27 @@ gvmd --user=admin --new-password=
 ```
 ## Configuración
 Si existieran tasks o targets anteriores, borrarlos.
+#### Config
+en la carpeta Config, copiar el fichero config_example.json a config.json.
+Modificar los valores con los correspondientes de la ubicacion
+#### Cron
+En la carpeta Cron, dar permisos de ejecución:
+```
+cd Cron
+chmod +x *.sh
+```
+Copiar actualiza_gvm y cron-update a /usr/bin
+
+Añadir redteam a sudoers
+
+```
+sudo su
+echo 'redteam ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+```
 #### Configuración de Targets y Tasks
+En Targets_Tasks existe una plantilla para la importación de los targets y su correspondiente task.
+Una vez rellenado, obtenemos los puertos:
+```
+python3 get-ports.py
+```
