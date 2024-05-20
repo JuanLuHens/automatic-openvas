@@ -10,8 +10,8 @@ export INSTALL_DIR=$HOME/install && mkdir -p $INSTALL_DIR
 export GVM_VERSION=$1
 
 
-sudo mv $BUILD_DIR/openvas-scanner $BUILD_DIR/openvas-scanner-$GVM_Version
-sudo mv $SOURCE_DIR $SOURCE_DIR-$GVM_VERSION
+sudo rm $BUILD_DIR/openvas-scanne* -rdf
+sudo rm $SOURCE_DIR -rdf
 mkdir $BUILD_DIR/openvas-scanner
 mkdir $SOURCE_DIR
 
