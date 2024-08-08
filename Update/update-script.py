@@ -39,10 +39,13 @@ def get_version_github(url):
                 return version
             else:
                 print("No se encontró la clave 'version' en el JSON.")
+                return 0
         else:
             print(f"Error en la solicitud. Código de estado: {response.status_code}")
+            return 0
     except Exception as e:
         print(f"Error: {e}")
+        return 0
         
 def leer_configuracion(fichero):
     try:
@@ -51,21 +54,26 @@ def leer_configuracion(fichero):
             return configuracion
     except FileNotFoundError:
         print("El archivo 'config.json' no se encontró.")
+        return 0
     except json.JSONDecodeError as e:
         print(f"Error al decodificar el archivo JSON: {e}")
+        return 0
     except Exception as e:
         print(f"Ocurrió un error: {e}")
+        return 0
 
 url_github = "https://raw.githubusercontent.com/JuanLuHens/automatic-openvas/main/Config/config_example.json"
 version_github = get_version_github(url_github)
 configuracion = leer_configuracion('/home/redteam/gvm/Config/config_example.json')
 version_local = configuracion.get('version')
-
-if(version_github==version_local):
-    print("Misma version")
+if(configuracion == 0 or version_local == 0:
+    print("No se puede comprobar la version")
 else:
-    print("Diferente version")
-    config = leer_configuracion('/home/redteam/gvm/Config/config.json')
-    resultado = subprocess.run(["git","pull"], cwd='/home/redteam/gvm/', capture_output=True, text=True)
-    email(version_github, config, resultado)
+    if(version_github==version_local):
+        print("Misma version")
+    else:
+        print("Diferente version")
+        config = leer_configuracion('/home/redteam/gvm/Config/config.json')
+        resultado = subprocess.run(["git","pull"], cwd='/home/redteam/gvm/', capture_output=True, text=True)
+        email(version_github, config, resultado)
     
