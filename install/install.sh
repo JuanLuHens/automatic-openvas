@@ -377,10 +377,10 @@ sudo -v
 sudo -u gvm greenbone-nvt-sync
 
 # Update Greenbone Feed Sync (run the commands one by one as GVM user). This might take awhile.
-sudo -u gvm greenbone-feed-sync --type GVMD_DATA -vvv
-sudo -u gvm greenbone-feed-sync --type SCAP -vvv
-sudo -u gvm greenbone-feed-sync --type CERT -vvv
-sudo -u gvm greenbone-feed-sync --type nvt -vvv
+#sudo -u gvm greenbone-feed-sync --type GVMD_DATA -vvv
+#sudo -u gvm greenbone-feed-sync --type SCAP -vvv
+#sudo -u gvm greenbone-feed-sync --type CERT -vvv
+#sudo -u gvm greenbone-feed-sync --type nvt -vvv
 
 # Generate GVM certificates for HTTPS
 sudo -v
