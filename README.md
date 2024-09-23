@@ -25,6 +25,8 @@ pip3 install -r requirements.txt
 # Ingresar al directorio "install" y ejecutar los scripts de instalacion:
 cd install
 python3 get-versionesonline.py #para obtener las ultimas versiones
+chmod +x pre-install.sh #para actualizar cmake y obtener la ruta de pkgconfig
+./pre-install.sh
 chmod +x install.sh
 ./install.sh
 
