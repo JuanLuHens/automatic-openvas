@@ -27,7 +27,7 @@ sudo -v
 sudo apt-get update && \
 sudo apt-get -y upgrade && \
 sudo apt-get install -y build-essential && \
-sudo apt-get install -y cmake pkg-config gcc-mingw-w64 \
+sudo apt-get install -y pkg-config gcc-mingw-w64 \
 libgnutls28-dev libxml2-dev libssh-gcrypt-dev libunistring-dev libcurl4-openssl-dev \
 libldap2-dev libgcrypt20-dev libpcap-dev libglib2.0-dev libgpgme-dev libradcli-dev libjson-glib-dev \
 libksba-dev libical-dev libpq-dev libsnmp-dev libpopt-dev libnet1-dev gnupg gnutls-bin \
