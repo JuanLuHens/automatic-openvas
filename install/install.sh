@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Instalador de openvas 01/01/2024 para ubuntu 22.04.03
+# Instalador de openvas 23/09/2024 para ubuntu 22.04.04
 #  _____           _        _           _            
 # |_   _|         | |      | |         | |           
 #   | |  _ __  ___| |_ __ _| | __ _  __| | ___  _ __ 
@@ -37,7 +37,7 @@ heimdal-dev dpkg rsync zip rpm nsis socat libbsd-dev snmp uuid-dev curl gpgsm \
 python3 python3-paramiko python3-lxml python3-defusedxml python3-pip python3-psutil python3-impacket \
 python3-setuptools python3-packaging python3-wrapt python3-cffi python3-redis python3-gnupg \
 xmlstarlet texlive-fonts-recommended texlive-latex-extra perl-base xml-twig-tools \
-libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format jq 
+libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format jq libcjson-dev 
 
 # Create GVM user and group
 sudo useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
@@ -151,10 +151,11 @@ else
     export NODE_VERSION=node_18.x && \
     export KEYRING=/usr/share/keyrings/nodesource.gpg && \
     export DISTRIBUTION="$(lsb_release -s -c)" && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null && \
-    gpg --no-default-keyring --keyring "$KEYRING" --list-keys && \
-    echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee /etc/apt/sources.list.d/nodesource.list && \
-    echo "deb-src [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list && \
+    #curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor | sudo tee "$KEYRING" >/dev/null && \
+    #gpg --no-default-keyring --keyring "$KEYRING" --list-keys && \
+    #echo "deb [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee /etc/apt/sources.list.d/nodesource.list && \
+    #echo "deb-src [signed-by=$KEYRING] https://deb.nodesource.com/$NODE_VERSION $DISTRIBUTION main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo bash -
     sudo apt update && \
     sudo apt install -y nodejs
 fi
@@ -264,8 +265,8 @@ sudo cp -rv $INSTALL_DIR/* / && \
 rm -rf $INSTALL_DIR/*
 
 # tomli module (required for notus-scanner)
-sudo python3 -m pip install python-gnupg==0.5.2
-sudo python3 -m pip install tomli
+sudo python3 -m pip install python-gnupg==0.5.2 --break-system-packages
+sudo python3 -m pip install tomli --break-system-packages
 
 # gvm-tools (Installing gvm-tools system-wide)
 # Test to replace $INSTALL_PREFIX with specified path --prefix=/usr/local
@@ -309,7 +310,7 @@ sudo -v
 # sudo chmod 740 /usr/local/sbin/greenbone-feed-sync && \
 # sudo chown gvm:gvm /usr/local/sbin/greenbone-*-sync && \
 # sudo chmod 740 /usr/local/sbin/greenbone-*-sync
-sudo python3 -m pip install greenbone-feed-sync
+sudo python3 -m pip install greenbone-feed-sync --break-system-packages
 
 
 # Feed validation
@@ -343,7 +344,7 @@ if echo "$DISTRIBUTION" | grep -q "kali"; then
     sudo systemctl start postgresql.service
 else
     echo "ubuntu"
-    sudo systemctl start postgresql@14-main.service
+    sudo systemctl start postgresql@16-main.service
 fi
 
 
