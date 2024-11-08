@@ -145,7 +145,7 @@ def start_task(connection, user, password, configuracion):
             print("Todas las tareas finalizadas")
             email(logfinal, tasklog, configuracion)
             print("Exportamos las tasks")
-            subprocess.run(["python3", "/home/redteam/gvm/Reports/get-reports-os.py"])
+            subprocess.run(["python3", "/home/redteam/gvm/Reports/get-reports-test.py"])
         return 0
 
 configuracion = leer_configuracion()
