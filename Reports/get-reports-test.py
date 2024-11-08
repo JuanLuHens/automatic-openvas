@@ -337,3 +337,4 @@ if __name__ == "__main__":
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat, destino)
     email(configuracion)
+    print("finalizado")
