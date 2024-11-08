@@ -11,5 +11,5 @@
     "aws_access_key_id":"1",
     "aws_secret_access_key":"1",
     "s3bucket":"1",
-    "version": "1.2024.11.8_13"
+    "version": "1.2024.11.8_14"
 } 
