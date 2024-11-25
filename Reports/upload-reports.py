@@ -80,7 +80,8 @@ def email(file1, configuracion):
     <head></head>
     <body>
     <p>Buenos dias,</p>
-    <p>Se adjunta los reportes del scan externo realizado por openvas</p>
+    <p>Finalizadas las subidas</p>
+    <p>Se adjunta el log de subida a Balbix.</p>
     </body>
     </html>
     """
