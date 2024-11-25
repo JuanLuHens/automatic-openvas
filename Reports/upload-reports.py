@@ -65,9 +65,8 @@ def uploadfile(s3bucket, filelist, tasklog, s3):
         except Exception as error:
             print (error)
             
-def email(file1,file2, configuracion):
+def email(file1, configuracion):
     file_name=os.path.basename(file1)
-    file2_name=os.path.basename(file2)
     smtp_user = configuracion.get('smtp_user')
     smtp_pass = configuracion.get('smtp_pass')
     smtp_server = configuracion.get('mailserver')
@@ -98,14 +97,6 @@ def email(file1,file2, configuracion):
     file1_mime.add_header('Content-Disposition', f'attachment; filename={file_name}')
     msg.attach(file1_mime)
     file1_attachment.close()
-    # Adjuntar file2.txt
-    file2_attachment = open(file2, 'rb')
-    file2_mime = MIMEBase('application', 'octet-stream')
-    file2_mime.set_payload(file2_attachment.read())
-    encoders.encode_base64(file2_mime)
-    file2_mime.add_header('Content-Disposition', f'attachment; filename={file2_name}')
-    msg.attach(file2_mime)
-    file2_attachment.close()
 #    smtp = smtplib.SMTP(smtp_server, smtp_port)
 #    smtp.sendmail(from_address, to_address, msg.as_string())
 #    smtp.quit()
