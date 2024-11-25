@@ -3,13 +3,27 @@ from gvm.protocols.gmp import Gmp
 import xml.etree.ElementTree as ET
 import getpass
 import os, glob
+import json
+
+def leer_configuracion():
+    try:
+        with open('/home/redteam/gvm/Config/config.json', 'r') as archivo:
+            configuracion = json.load(archivo)
+            return configuracion
+    except FileNotFoundError:
+        print("El archivo 'config.json' no se encontró.")
+    except json.JSONDecodeError as e:
+        print(f"Error al decodificar el archivo JSON: {e}")
+    except Exception as e:
+        print(f"Ocurrió un error: {e}")
 
 def get_pass():
     password=getpass.getpass(prompt='Enter password: ')
     return password
 
-user = 'admin'
-password = get_pass()
+configuracion = leer_configuracion()
+user = configuracion.get('user')
+password = configuracion.get('password')
 # path to unix socket
 path = '/run/gvmd/gvmd.sock'
 connection = UnixSocketConnection(path=path)

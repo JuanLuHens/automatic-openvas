@@ -65,18 +65,23 @@ def uploadfile(s3bucket, filelist, tasklog, s3):
         except Exception as error:
             print (error)
             
-def email(file1, configuracion):
+def email(file1,file2, configuracion):
+    file_name=os.path.basename(file1)
+    file2_name=os.path.basename(file2)
+    smtp_user = configuracion.get('smtp_user')
+    smtp_pass = configuracion.get('smtp_pass')
     smtp_server = configuracion.get('mailserver')
-    smtp_port = 25  # Puerto 25 para autenticación anónima
+    smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
-    region = configuracion.get('region')
-    subject = f'[{region}]Openvas subida Balbix'
+    pais = configuracion.get('pais')
+
+    subject = f'Openvas Scan {pais}'
     message = """<html>
     <head></head>
     <body>
-    <p>Se han finalizado las subidas a balbix.</p>
-    <p>Compruebe el log adjunto y si es correcto, elimine los reportes con delete-files para empezar de nuevo los scaneos.</p>
+    <p>Buenos dias,</p>
+    <p>Se adjunta los reportes del scan externo realizado por openvas</p>
     </body>
     </html>
     """
@@ -90,14 +95,36 @@ def email(file1, configuracion):
     file1_mime = MIMEBase('application', 'octet-stream')
     file1_mime.set_payload(file1_attachment.read())
     encoders.encode_base64(file1_mime)
-    file1_mime.add_header('Content-Disposition', f'attachment; filename=logbalbix.txt')
+    file1_mime.add_header('Content-Disposition', f'attachment; filename={file_name}')
     msg.attach(file1_mime)
     file1_attachment.close()
-    smtp = smtplib.SMTP(smtp_server, smtp_port)
-    smtp.sendmail(from_address, to_address, msg.as_string())
-    smtp.quit()
+    # Adjuntar file2.txt
+    file2_attachment = open(file2, 'rb')
+    file2_mime = MIMEBase('application', 'octet-stream')
+    file2_mime.set_payload(file2_attachment.read())
+    encoders.encode_base64(file2_mime)
+    file2_mime.add_header('Content-Disposition', f'attachment; filename={file2_name}')
+    msg.attach(file2_mime)
+    file2_attachment.close()
+#    smtp = smtplib.SMTP(smtp_server, smtp_port)
+#    smtp.sendmail(from_address, to_address, msg.as_string())
+#    smtp.quit()
+    try:
+        # Establece la conexión con el servidor
+        smtp = smtplib.SMTP(smtp_server, smtp_port)
+        smtp.ehlo()  # Identifícate con el servidor
+        smtp.starttls()  # Inicia la conexión TLS
+        smtp.ehlo()  # Vuelve a identificarse como una conexión segura
+        smtp.login(smtp_user, smtp_pass)  # Inicia sesión en el servidor SMTP
 
-
+        # Envía el correo
+        smtp.sendmail(from_address, to_address, msg.as_string())
+        print("Correo enviado exitosamente.")
+    except Exception as e:
+        print(f"Error al enviar el correo: {e}")
+    finally:
+        # Cierra la conexión
+        smtp.quit()
 
 
 if __name__ == '__main__':
@@ -116,3 +143,7 @@ if __name__ == '__main__':
     uploadfile(s3bucket, fileList, tasklog, s3)
     listbucket(s3bucket, tasklog, session)
     email(tasklog, configuracion)
+    #email(fileList[0], fileList[1], configuracion)
+    print("Borramos reportes y comenzamos de nuevo")
+    #subprocess.run(["python3", "/home/redteam/gvm/Targets_Tasks/delete-files.py"])
+

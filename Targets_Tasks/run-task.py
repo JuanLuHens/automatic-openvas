@@ -35,7 +35,7 @@ def write_log(mensaje, log):
         
 def email(file1, file2, configuracion):
     smtp_server = configuracion.get('mailserver')
-    smtp_port = 25  # Puerto 25 para autenticación anónima
+    smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
     region = configuracion.get('region')

@@ -44,7 +44,7 @@ def email(configuracion):
     message = """<html>
     <head></head>
     <body>
-    <p>Se han generado los reportes. Se procede a subirlos a balbix.</p>
+    <p>Se han generado los reportes. Se procede a subirlos a Sharepoint y Balbix.</p>
     </body>
     </html>
     """
@@ -154,6 +154,8 @@ def guardar(fichero, data):
 
 # Función para eliminar duplicados y unificar archivos
 def delete_duplicates(files, export, host):
+    configuracion = leer_configuracion()
+    pais =  configuracion.get("pais")
     now = datetime.datetime.now()
     year = now.year
     month = now.month
@@ -168,11 +170,18 @@ def delete_duplicates(files, export, host):
     dataframe = pd.concat(dataframes, ignore_index=True)[columnas]
     dataframe = dataframe.drop_duplicates()
     dataframe.to_csv(nombre_archivo, index=False)
-    file_unif = vulns_ip(nombre_archivo, host)
+    file_unif, file_excel = vulns_ip(nombre_archivo, host)
     #solo para la externa
     #print("Lanzamos subida a balbix")
     #subprocess.run(["python3", "/home/redteam/gvm/Reports/upload-reports.py"] + [file_unif])
     #fin externa
+    #enviamos sharepoint
+    subprocess.run(["python3", "/home/redteam/gvm/Reports/subida_share.py", "-f", file_unif, 
+    "-p", pais, 
+    "-a", 'Openvas_Interno'])
+    subprocess.run(["python3", "/home/redteam/gvm/Reports/subida_share.py", "-f", file_excel,  
+    "-p", pais,
+    "-a", 'Openvas_Interno'])
     separar_cve(file_unif)
 
 # Función para separar CVEs y misconfiguraciones
@@ -275,7 +284,6 @@ def vulns_ip(vulns, host):
     paises = []
     severidades = []
     regiones = []
-    #esto es para la externa
     pais_region_map = {
             'COLOMBIA': 'SUR',
             'PERU': 'SUR',
@@ -286,11 +294,10 @@ def vulns_ip(vulns, host):
             'US': 'NORTE',
             'MÉXICO': 'NORTE',
             'GUATEMALA': 'NORTE',
-            'EL SALVADOR': 'NORTE',
-            'PUERTO RICO': 'NORTE',
+            'EL_SALVADOR': 'NORTE',
+            'PUERTO_RICO': 'NORTE',
             'BRASIL': 'Brasil'
         }
-    #fin de regiones de la externa
     for ip, cvss in zip(df_ips['IP'], df_ips['CVSS']):
         sistema = df_sistemas[df_sistemas['ip'] == ip]['sistema_operativo'].values
         if len(sistema) > 0:
@@ -316,7 +323,7 @@ def vulns_ip(vulns, host):
     df_ips = df_ips.drop(columns=['Solution'])
     df_ips.to_csv(nombre_archivo_csv, index=False)
     df_ips.to_excel(nombre_archivo_xlsx, index=False)
-    return nombre_archivo_csv
+    return nombre_archivo_csv,nombre_archivo_xlsx
 
 if __name__ == "__main__":
     dir_csv = '/home/redteam/gvm/Reports/exports/'
