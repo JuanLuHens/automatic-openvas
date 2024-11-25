@@ -2,6 +2,8 @@
     "mailserver": "10.1.1.1",
     "user": "admin",
     "password": "admin",
+    "smtp_user": "",
+    "smtp_pass": "",
     "region": "norte sur emea...",
     "pais": "pais",
     "scope": "INTERNAL or EXTERNAL",
