@@ -137,5 +137,5 @@ if __name__ == '__main__':
     email(tasklog, configuracion)
     #email(fileList[0], fileList[1], configuracion)
     print("Borramos reportes y comenzamos de nuevo")
-    #subprocess.run(["python3", "/home/redteam/gvm/Targets_Tasks/delete-files.py"])
+    subprocess.run(["python3", "/home/redteam/gvm/Targets_Tasks/delete-files.py"])
 
