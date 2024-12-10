@@ -291,7 +291,7 @@ def vulns_ip(vulns, host):
             'CHILE': 'SUR',
             'ESPAÑA': 'EMEA',
             'MARRUECOS': 'EMEA',
-            'US': 'NORTE',
+            'USNS': 'NORTE',
             'MÉXICO': 'NORTE',
             'GUATEMALA': 'NORTE',
             'EL_SALVADOR': 'NORTE',
