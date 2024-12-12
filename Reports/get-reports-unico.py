@@ -285,13 +285,13 @@ def vulns_ip(vulns, host):
             'PERU': 'SUR',
             'ARGENTINA': 'SUR',
             'CHILE': 'SUR',
-            'ESPAÑA': 'EMEA',
+            'SPAIN': 'EMEA',
             'MARRUECOS': 'EMEA',
-            'US': 'NORTE',
-            'MÉXICO': 'NORTE',
+            'USA': 'NORTE',
+            'MEXICO': 'NORTE',
             'GUATEMALA': 'NORTE',
-            'EL SALVADOR': 'NORTE',
-            'PUERTO RICO': 'NORTE',
+            'EL_SALVADOR': 'NORTE',
+            'PUERTO_RICO': 'NORTE',
             'BRASIL': 'Brasil'
         }
     #fin de regiones de la externa
