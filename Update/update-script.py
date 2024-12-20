@@ -7,11 +7,13 @@ from email.mime.multipart import MIMEMultipart
 
 def email(version, configuracion, resultado):
     smtp_server = configuracion.get('mailserver')
-    smtp_port = 25  # Puerto 25 para autenticación anónima
+    smtp_user = configuracion.get('smtp_user')
+    smtp_pass = configuracion.get('smtp_pass')
+    smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
-    region = configuracion.get('region')
-    subject = f'[{region}]Script automatizado de Openvas actualizado {version}'
+    pais = configuracion.get('pais')
+    subject = f'[{pais}]Script automatizado de Openvas actualizado {version}'
     message = f'''<html>
     <head></head>
     <body>
@@ -25,9 +27,26 @@ def email(version, configuracion, resultado):
     msg['To'] = to_address
     msg['Subject'] = subject
     msg.attach(MIMEText(message, 'html'))
-    smtp = smtplib.SMTP(smtp_server, smtp_port)
-    smtp.sendmail(from_address, to_address, msg.as_string())
-    smtp.quit()
+#    smtp = smtplib.SMTP(smtp_server, smtp_port)
+#    smtp.sendmail(from_address, to_address, msg.as_string())
+#    smtp.quit()
+    try:
+        # Establece la conexión con el servidor
+        smtp = smtplib.SMTP(smtp_server, smtp_port)
+        smtp.ehlo()  # Identifícate con el servidor
+        smtp.starttls()  # Inicia la conexión TLS
+        smtp.ehlo()  # Vuelve a identificarse como una conexión segura
+        smtp.login(smtp_user, smtp_pass)  # Inicia sesión en el servidor SMTP
+
+        # Envía el correo
+        smtp.sendmail(from_address, to_address, msg.as_string())
+        print("Correo enviado exitosamente.")
+    except Exception as e:
+        print(f"Error al enviar el correo: {e}")
+    finally:
+        # Cierra la conexión
+        smtp.quit()
+
 
 def get_version_github(url):
     try:
