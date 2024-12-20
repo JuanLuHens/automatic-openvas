@@ -85,7 +85,7 @@ url_github = "https://raw.githubusercontent.com/JuanLuHens/automatic-openvas/mai
 version_github = get_version_github(url_github)
 configuracion = leer_configuracion('/home/redteam/gvm/Config/config_example.json')
 version_local = configuracion.get('version')
-if(configuracion == 0 or version_local == 0):
+if(version_github == 0 or version_local == 0):
     print("No se puede comprobar la version")
 else:
     if(version_github==version_local):
