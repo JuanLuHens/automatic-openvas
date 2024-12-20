@@ -285,14 +285,15 @@ def vulns_ip(vulns, host):
             'PERU': 'SUR',
             'ARGENTINA': 'SUR',
             'CHILE': 'SUR',
-            'ESPAÑA': 'EMEA',
-            'MARRUECOS': 'EMEA',
-            'US': 'NORTE',
-            'MÉXICO': 'NORTE',
+            'BAAGRI': 'NORTE',
+            'EMEA': 'EMEA',
+            'USNS': 'NORTE',
+            'MEXICO': 'NORTE',
             'GUATEMALA': 'NORTE',
-            'EL SALVADOR': 'NORTE',
-            'PUERTO RICO': 'NORTE',
-            'BRASIL': 'Brasil'
+            'EL_SALVADOR': 'NORTE',
+            'PUERTO_RICO': 'NORTE',
+            'INTERFILE': 'BRASIL',
+            'BRASIL': 'BRASIL'
         }
     #fin de regiones de la externa
     for ip, cvss in zip(df_ips['IP'], df_ips['CVSS']):

@@ -289,14 +289,15 @@ def vulns_ip(vulns, host):
             'PERU': 'SUR',
             'ARGENTINA': 'SUR',
             'CHILE': 'SUR',
-            'ESPAÑA': 'EMEA',
-            'MARRUECOS': 'EMEA',
-            'US': 'NORTE',
-            'MÉXICO': 'NORTE',
+            'BAAGRI': 'NORTE',
+            'EMEA': 'EMEA',
+            'USNS': 'NORTE',
+            'MEXICO': 'NORTE',
             'GUATEMALA': 'NORTE',
             'EL_SALVADOR': 'NORTE',
             'PUERTO_RICO': 'NORTE',
-            'BRASIL': 'Brasil'
+            'INTERFILE': 'BRASIL',
+            'BRASIL': 'BRASIL'
         }
     for ip, cvss in zip(df_ips['IP'], df_ips['CVSS']):
         sistema = df_sistemas[df_sistemas['ip'] == ip]['sistema_operativo'].values
