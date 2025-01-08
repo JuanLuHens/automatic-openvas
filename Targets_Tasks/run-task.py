@@ -35,15 +35,17 @@ def write_log(mensaje, log):
         
 def email(file1, file2, configuracion):
     smtp_server = configuracion.get('mailserver')
+    smtp_user = configuracion.get('smtp_user')
+    smtp_pass = configuracion.get('smtp_pass')
     smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
-    region = configuracion.get('region')
-    subject = f'[{region}]Openvas tasks finalizadas'
+    pais = configuracion.get('pais')
+    subject = f'[{pais}]Openvas tasks finalizadas'
     message = """<html>
     <head></head>
     <body>
-    <p>Se han finalizado las tasks de la region. Recuerde exportar los reportes.</p>
+    <p>Se han finalizado las tasks de la region. Se procede a las subidas y eliminar reports.</p>
     </body>
     </html>
     """
@@ -69,9 +71,25 @@ def email(file1, file2, configuracion):
     file2_mime.add_header('Content-Disposition', f'attachment; filename=taskslog.txt')
     msg.attach(file2_mime)
     file2_attachment.close()
-    smtp = smtplib.SMTP(smtp_server, smtp_port)
-    smtp.sendmail(from_address, to_address, msg.as_string())
-    smtp.quit()
+    #smtp = smtplib.SMTP(smtp_server, smtp_port)
+    #smtp.sendmail(from_address, to_address, msg.as_string())
+    #smtp.quit()
+    try:
+        # Establece la conexión con el servidor
+        smtp = smtplib.SMTP(smtp_server, smtp_port)
+        smtp.ehlo()  # Identifícate con el servidor
+        smtp.starttls()  # Inicia la conexión TLS
+        smtp.ehlo()  # Vuelve a identificarse como una conexión segura
+        smtp.login(smtp_user, smtp_pass)  # Inicia sesión en el servidor SMTP
+
+        # Envía el correo
+        smtp.sendmail(from_address, to_address, msg.as_string())
+        print("Correo enviado exitosamente.")
+    except Exception as e:
+        print(f"Error al enviar el correo: {e}")
+    finally:
+        # Cierra la conexión
+        smtp.quit()
 
 def connect_gvm():
     # path to unix socket
