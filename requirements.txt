@@ -24,7 +24,7 @@ pycparser==2.21
 PyNaCl==1.5.0
 python-dateutil==2.8.2
 python-gnupg==0.5.2
-python-gvm==23.10.0
+python-gvm==26.1.0
 pytz==2023.3.post1
 requests==2.32.0
 s3transfer==0.10.1
