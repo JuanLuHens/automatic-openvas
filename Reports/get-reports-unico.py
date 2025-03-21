@@ -126,7 +126,7 @@ def ready_report(connection, user, password, reportformat, host, reporte):
             reportscv = gmp.get_report(
                 report_id=reportID,
                 report_format_id=reportFormatID,
-                filter_string="apply_overrides=0 min_qod=70 severity>0",
+                filter_string="apply_overrides=1 min_qod=70 severity>0",
                 ignore_pagination=True,
                 details=True,
             )

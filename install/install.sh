@@ -37,7 +37,7 @@ heimdal-dev dpkg rsync zip rpm nsis socat libbsd-dev snmp uuid-dev curl gpgsm \
 python3 python3-paramiko python3-lxml python3-defusedxml python3-pip python3-psutil python3-impacket \
 python3-setuptools python3-packaging python3-wrapt python3-cffi python3-redis python3-gnupg \
 xmlstarlet texlive-fonts-recommended texlive-latex-extra perl-base xml-twig-tools \
-libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format jq libcjson-dev 
+libpaho-mqtt-dev python3-paho-mqtt mosquitto xmltoman doxygen clang-format jq libcjson-dev
 
 # Create GVM user and group
 sudo useradd -r -M -U -G sudo -s /usr/sbin/nologin gvm && \
