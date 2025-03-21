@@ -8,6 +8,7 @@
     "pais": "pais",
     "scope": "INTERNAL or EXTERNAL",
     "Owner": "",
+    "site": "",
     "from": "openvas@openvas.com",
     "to": "redteam@redteam.com",
     "aws_access_key_id":"1",
