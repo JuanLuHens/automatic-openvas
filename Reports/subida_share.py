@@ -19,14 +19,15 @@ def get_sharepoint_context_using_user():
     configuracion = leer_configuracion()
     username = configuracion.get('smtp_user')
     password = configuracion.get('smtp_pass')
+    site = configuracion.get('site')
     sharepoint_url = 'https://atentoglobal.sharepoint.com/sites/RedTeam/'
     user_credentials = UserCredential(username, password)  
     ctx = ClientContext(sharepoint_url).with_credentials(user_credentials)
-    return ctx
+    return ctx,site
 
 def upload_file_to_sharepoint(file_path, pais, automatizacion):
-    ctx = get_sharepoint_context_using_user()
-    folder_url = f"/sites/RedTeam/Shared Documents/General/Subidas/{pais}/{automatizacion}"
+    ctx,site = get_sharepoint_context_using_user()
+    folder_url = f"/sites/RedTeam/Shared Documents/General/Subidas/{pais}/{automatizacion}/{site}"
     folder = ctx.web.get_folder_by_server_relative_url(folder_url)
     ctx.load(folder)
     ctx.execute_query()

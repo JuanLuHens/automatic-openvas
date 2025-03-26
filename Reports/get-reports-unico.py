@@ -40,11 +40,12 @@ def email(configuracion):
     smtp_server = configuracion.get('mailserver')
     smtp_user = configuracion.get('smtp_user')
     smtp_pass = configuracion.get('smtp_pass')
+    site = configuracion.get('site')
     smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
     pais = configuracion.get('pais')
-    subject = f'[{pais}]Openvas Exteno Reportes generados'
+    subject = f'[{pais}-{site}]Openvas Exteno Reportes generados'
     message = """<html>
     <head></head>
     <body>

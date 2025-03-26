@@ -71,11 +71,12 @@ def email(file1, configuracion):
     smtp_pass = configuracion.get('smtp_pass')
     smtp_server = configuracion.get('mailserver')
     smtp_port = 587  # Puerto 25 para autenticación anónima
+    site = configuracion.get('site')
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
     pais = configuracion.get('pais')
 
-    subject = f'Openvas Scan {pais}'
+    subject = f'Openvas Scan {pais}-{site}'
     message = """<html>
     <head></head>
     <body>

@@ -36,8 +36,9 @@ def email(file1, configuracion, cuerpoemail):
     smtp_port = 587  # Puerto 25 para autenticación anónima
     from_address = configuracion.get('from')
     to_address = configuracion.get('to')
+    site = configuracion.get('site')
     pais = configuracion.get('pais')
-    subject = f'[{pais}]Openvas Updates finalizado'
+    subject = f'[{pais}-{site}]Openvas Updates finalizado'
     message = f"""<html>
     <head></head>
     <body>
