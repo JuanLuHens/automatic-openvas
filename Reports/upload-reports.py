@@ -132,9 +132,9 @@ if __name__ == '__main__':
     tasklog='/home/redteam/gvm/logbalbix.txt'
     if os.path.exists(tasklog):
         os.remove(tasklog)
-    uploadfile(s3bucket, fileList, tasklog, s3)
-    listbucket(s3bucket, tasklog, session)
-    email(tasklog, configuracion)
+    #uploadfile(s3bucket, fileList, tasklog, s3)
+    #listbucket(s3bucket, tasklog, session)
+    #email(tasklog, configuracion)
     #email(fileList[0], fileList[1], configuracion)
     print("Borramos reportes y comenzamos de nuevo")
     subprocess.run(["python3", "/home/redteam/gvm/Targets_Tasks/delete-files.py"])
