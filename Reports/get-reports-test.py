@@ -18,6 +18,9 @@ from email.mime.base import MIMEBase
 from email import encoders
 import ipaddress
 
+REPORTS_DIR = "/home/redteam/gvm/Reports"
+CSV_FILE = os.path.join(REPORTS_DIR, "exclusion.csv")
+
 # Función para leer la configuración
 def leer_configuracion():
     try:
@@ -153,6 +156,30 @@ def guardar(fichero, data):
     with open(fichero, "w") as f:
         f.write(data)
 
+def get_excluded_ips(gmp, target_id):
+    """Obtiene las IPs excluidas de un target."""
+    respuesta_target = gmp.get_target(target_id=target_id)
+    root_target = ET.fromstring(respuesta_target)
+
+    exclusions = []
+    for tag in ["exclude", "exclude_hosts", "hosts_excluded"]:
+        exclusions_elem = root_target.find(f".//{tag}")
+        if exclusions_elem is not None and exclusions_elem.text:
+            exclusions.extend([ip.strip() for ip in exclusions_elem.text.split(',') if ip.strip()])
+    return exclusions
+
+def load_existing_records():
+    """Carga los registros existentes del CSV."""
+    existing_records = []
+    if os.path.exists(CSV_FILE):
+        with open(CSV_FILE, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                existing_records.append((row['task_name'], row['excluded_ips']))
+    return existing_records
+
+
+
 # Función para eliminar duplicados y unificar archivos
 def delete_duplicates(files, export, host):
     configuracion = leer_configuracion()
@@ -172,6 +199,7 @@ def delete_duplicates(files, export, host):
     dataframe = dataframe.drop_duplicates()
     dataframe.to_csv(nombre_archivo, index=False)
     file_unif, file_excel = vulns_ip(nombre_archivo, host)
+    
     #solo para la externa
     #print("Lanzamos subida a balbix")
     #subprocess.run(["python3", "/home/redteam/gvm/Reports/upload-reports.py"] + [file_unif])
@@ -327,6 +355,58 @@ def vulns_ip(vulns, host):
     df_ips.to_excel(nombre_archivo_xlsx, index=False)
     return nombre_archivo_csv,nombre_archivo_xlsx
 
+def get_tasks_and_exclusions(connection, user, password, pais):
+    """Obtiene las tareas y extrae las IPs excluidas de sus targets asociados."""
+    # Cargar registros existentes
+    existing_records = load_existing_records()
+    
+    with Gmp(connection=connection) as gmp:
+        gmp.authenticate(user, password)
+
+        # Obtener todas las tareas
+        respuesta = gmp.get_tasks(filter_string='rows=-1')
+        root = ET.fromstring(respuesta)
+
+        # Preparar nuevos registros
+        new_records = []
+        for task_elem in root.findall(".//task"):
+            name = task_elem.findtext("name")
+            
+            # Obtener target asociado
+            target_elem = task_elem.find(".//target")
+            if target_elem is not None:
+                target_id = target_elem.get("id")
+                excluded_ips = get_excluded_ips(gmp, target_id)
+            else:
+                excluded_ips = []
+
+            # Solo procesar si hay IPs excluidas
+            if excluded_ips:
+                ips_str = ', '.join(sorted(excluded_ips))  # Ordenamos para consistencia
+                # Comprobar si ya existe este registro
+                if (name, ips_str) not in existing_records:
+                    new_records.append({
+                        'task_name': name,
+                        'excluded_ips': ips_str,
+                        'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    })
+
+        # Escribir nuevos registros si los hay
+        if new_records:
+            file_exists = os.path.exists(CSV_FILE)
+            with open(CSV_FILE, 'a', newline='') as csvfile:
+                fieldnames = ['task_name', 'excluded_ips', 'date']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                
+                # Escribir encabezado solo si el archivo no existía
+                if not file_exists:
+                    writer.writeheader()
+                writer.writerows(new_records)
+                
+        subprocess.run(["python3", "/home/redteam/gvm/Reports/subida_share.py", "-f", CSV_FILE, 
+        "-p", pais, 
+        "-a", 'Openvas_Interno'])
+
 if __name__ == "__main__":
     dir_csv = '/home/redteam/gvm/Reports/exports/'
     csv_files = glob.glob(os.path.join(dir_csv, '*.csv'))
@@ -341,9 +421,11 @@ if __name__ == "__main__":
     configuracion = leer_configuracion()
     username = configuracion.get('user')
     password = configuracion.get('password')
+    pais = configuracion.get('pais')
     connection = connect_gvm()
     get_hosts(origen, destino)
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat, destino)
+    get_tasks_and_exclusions(connection, username, password, pais)
     email(configuracion)
     print("finalizado")
