@@ -388,7 +388,7 @@ def get_tasks_and_exclusions(connection, user, password, pais):
                     new_records.append({
                         'task_name': name,
                         'excluded_ips': ips_str,
-                        'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        'date': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                     })
 
         # Escribir nuevos registros si los hay
