@@ -55,7 +55,7 @@ def ready_target(connection,user,password,df):
                     
 def create_target(titulo, rangos, desc,gmp,log_file):
     print(f'[TARGET]Título: {titulo}, Rangos: {rangos}, Descripción: {desc}')
-    response_create=gmp.create_target(name=titulo,hosts=rangos,comment=desc,port_list_id='730ef368-57e2-11e1-a90f-406186ea4fc5')
+    response_create=gmp.create_target(name=titulo,hosts=rangos,comment=desc,port_list_id='4c647224-00d3-4563-afb8-f516fd396451')
     create_xml= ET.fromstring(response_create)
     status_target = create_xml.get('status')
     status_target_text = create_xml.get('status_text')
@@ -68,12 +68,17 @@ def create_target(titulo, rangos, desc,gmp,log_file):
         create_task(titulo,id_target,desc,gmp,log_file)
 
 def create_task(name,id,desc,gmp,log_file):
+    task_preferences = {
+        "hosts_ordering": "random",
+        "max_checks": "2",
+        "max_hosts": "5"
+    }
     print(f'[TASK]Título: {name}, Descripción: {desc}')
     # config id for full and fast daba56c8-73ec-11df-a475-002264764cea
     configid = 'daba56c8-73ec-11df-a475-002264764cea'
     # scanner id for openvas default 08b69003-5fc2-4037-a479-93b440211c73
     scannerid = '08b69003-5fc2-4037-a479-93b440211c73'
-    responsetask=gmp.create_task(name=name,config_id=configid,target_id=id,scanner_id=scannerid,comment=desc,scan_order='random', maximum_concurrently_executed_nvts_per_host=2, maximum_concurrently_scanned_hosts=5)
+    responsetask=gmp.create_task(name=name,config_id=configid,target_id=id,scanner_id=scannerid,comment=desc, task_preferences=task_preferences)
     create_xml= ET.fromstring(responsetask)
     status_task = create_xml.get('status')
     status_task_text = create_xml.get('status_text')
