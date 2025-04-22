@@ -189,8 +189,8 @@ def separar_cve(nombre_archivo):
         con_info.to_csv(nombre_archivo.replace('.csv', '_CVE.csv'), index=False)
         sin_info.to_csv(nombre_archivo.replace('.csv', '_Misconfigs.csv'), index=False)
         ficheros = [nombre_archivo.replace('.csv', '_CVE.csv'), nombre_archivo.replace('.csv', '_Misconfigs.csv')]
-        print("Ya no sube a Balbix, se mantiene para la subida a Valbix")
-        subprocess.run(["python3", "/home/redteam/gvm/Reports/upload-reports.py"] + ficheros)
+        #print("Ya no sube a Balbix, se mantiene para la subida a Valbix")
+        #subprocess.run(["python3", "/home/redteam/gvm/Reports/upload-reports.py"] + ficheros)
     except pd.errors.ParserError as pe:
         print(f"Error de análisis al procesar el archivo CSV: {pe}")
     except Exception as e:
