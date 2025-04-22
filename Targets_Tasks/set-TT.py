@@ -3,7 +3,7 @@ import getpass
 import xml.etree.ElementTree as ET
 from gvm.connections import UnixSocketConnection
 from gvm.protocols.gmp import Gmp
-from gvm.protocols.gmpv208.entities.hosts import HostsOrdering
+
 
 def load_csv(file):
     df = pd.read_csv(file, delimiter=';')
@@ -72,7 +72,7 @@ def create_task(name,id,desc,gmp,log_file):
         "max_checks": "2",
         "max_hosts": "5"
     }
-    scan_order = HostsOrdering.RANDOM
+    scan_order = 'random'
     print(f'[TASK]Título: {name}, Descripción: {desc}')
     # config id for full and fast daba56c8-73ec-11df-a475-002264764cea
     configid = 'daba56c8-73ec-11df-a475-002264764cea'
