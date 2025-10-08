@@ -199,4 +199,4 @@ for key, nversion in versiones.items():
             cuerpoemail+=f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado'
             write_log(f'ERROR. La actualizacion de {key} a la version {nversion} ha fallado', logupdate)
 print('Finalizadas las actualizaciones, se procede a enviar email')
-email(logupdate,configuracion, cuerpoemail)
+#email(logupdate,configuracion, cuerpoemail)

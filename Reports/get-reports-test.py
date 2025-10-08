@@ -427,5 +427,5 @@ if __name__ == "__main__":
     get_tasks_and_exclusions(connection, username, password, pais)
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat, destino)
-    email(configuracion)
+    #email(configuracion)
     print("finalizado")

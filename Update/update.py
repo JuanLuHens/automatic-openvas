@@ -68,7 +68,7 @@ if (control==1):
             f.write(soloversion)
             salida = os.system("bash /home/redteam/gvm/Update/update-scanner.sh " + soloversion)
             print(salida)
-            email(soloversion, configuracion)
+            #email(soloversion, configuracion)
         else:
             f.write(versionanterior)
             

@@ -95,5 +95,5 @@ else:
         print("Diferente version")
         config = leer_configuracion('/home/redteam/gvm/Config/config.json')
         resultado = subprocess.run(["git","pull"], cwd='/home/redteam/gvm/', capture_output=True, text=True)
-        email(version_github, config, resultado)
+        #email(version_github, config, resultado)
     

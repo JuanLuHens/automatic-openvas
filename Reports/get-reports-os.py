@@ -227,5 +227,5 @@ if __name__ == "__main__":
     get_hosts(origen,destino)
     reportformat = get_reportformat(connection, username, password)
     ready_report(connection, username, password, reportformat,destino)
-    email(configuracion)
+    #email(configuracion)
     
